@@ -551,33 +551,9 @@ function BlueprintResultCard({ result, form, consultSent, sendingConsult, onCons
           <p className="text-sm text-[#c4c4d8] leading-relaxed">{techStack.summarySentence}</p>
         </div>
 
-        {/* Tech Layers */}
-        <div className="p-6 sm:p-8 space-y-4">
-          {sections.map((section) => (
-            <div key={section.key} className="group">
-              <div className="flex items-center gap-2 mb-2.5">
-                <span className="text-sm">{section.icon}</span>
-                <h4 className="text-xs font-semibold uppercase tracking-wider" style={{ color: section.color }}>
-                  {section.label}
-                </h4>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                {section.items.map((item, i) => (
-                  <div
-                    key={i}
-                    className={`rounded-xl border ${COLORS.border} bg-[#0a0a0f]/60 px-4 py-3 transition-all duration-200 hover:border-opacity-50`}
-                    style={{ borderColor: `${section.color}20` }}
-                  >
-                    <div className="flex items-center justify-between gap-2 mb-1">
-                      <span className="text-xs text-[#9090a8]">{item.layer}</span>
-                    </div>
-                    <p className="text-sm font-semibold text-white">{item.tech}</p>
-                    <p className="text-xs text-[#606080] mt-1 leading-relaxed">{item.reason}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
+        {/* SVG Tech Stack Diagram */}
+        <div className="px-4 sm:px-6 py-5">
+          <TechStackSvg sections={sections} />
         </div>
 
         {/* Stats Bar */}
@@ -685,5 +661,95 @@ function Footer() {
         </div>
       </div>
     </footer>
+  );
+}
+
+/* ─── SVG Tech Stack Diagram ─── */
+
+function TechStackSvg({ sections }: { sections: { key: string; label: string; icon: string; color: string; items: { layer: string; tech: string; reason: string }[] }[] }) {
+  if (sections.length === 0) return null;
+
+  const NODE_W = 155;
+  const NODE_H = 58;
+  const GAP_X = 16;
+  const GAP_Y = 16;
+  const PAD = 12;
+  const LABEL_X = 50;
+
+  // Calculate SVG dimensions
+  const maxItems = Math.max(...sections.map(s => s.items.length));
+  const svgW = Math.max(600, maxItems * NODE_W + (maxItems - 1) * GAP_X + PAD * 2 + LABEL_X);
+  const svgH = sections.length * NODE_H + (sections.length - 1) * GAP_Y + PAD * 2;
+
+  return (
+    <div className="overflow-x-auto">
+      <svg viewBox={`0 0 ${svgW} ${svgH}`} className="w-full" xmlns="http://www.w3.org/2000/svg" style={{ minWidth: 500 }}>
+        <defs>
+          {sections.map(s => (
+            <linearGradient key={`g-${s.key}`} id={`tsgrad-${s.key}`} x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor={s.color} stopOpacity="0.2" />
+              <stop offset="100%" stopColor={s.color} stopOpacity="0.06" />
+            </linearGradient>
+          ))}
+          <filter id="ts-shadow">
+            <feDropShadow dx="0" dy="1.5" stdDeviation="2.5" floodColor="#000" floodOpacity="0.35" />
+          </filter>
+        </defs>
+
+        {sections.map((section, row) => {
+          const y = PAD + row * (NODE_H + GAP_Y);
+          const isCylinder = section.key === "database";
+          const isCloud = section.key === "infrastructure" || section.key === "integrations";
+
+          return (
+            <g key={section.key}>
+              {/* Section label */}
+              <text x={PAD} y={y + NODE_H / 2 + 1} fontSize="11" fontWeight="600" fill={section.color} fontFamily="system-ui, sans-serif" textAnchor="start" dominantBaseline="middle">
+                {section.label}
+              </text>
+
+              {/* Connecting line from label to first node */}
+              <line x1={LABEL_X - 12} y1={y + NODE_H / 2} x2={LABEL_X + 4} y2={y + NODE_H / 2} stroke={`${section.color}30`} strokeWidth="1.5" />
+
+              {/* Tech items */}
+              {section.items.map((item, col) => {
+                const x = LABEL_X + 8 + col * (NODE_W + GAP_X);
+                const rx = isCylinder ? 8 : isCloud ? NODE_H / 2 : 10;
+
+                return (
+                  <g key={`${section.key}-${col}`} filter="url(#ts-shadow)">
+                    {/* Node body */}
+                    {isCylinder ? (
+                      <>
+                        <ellipse cx={x + NODE_W / 2} cy={y + 6} rx={NODE_W / 2} ry={6} fill={`${section.color}12`} stroke={section.color} strokeWidth="1" strokeOpacity="0.3" />
+                        <rect x={x} y={y + 6} width={NODE_W} height={NODE_H - 12} fill={`url(#tsgrad-${section.key})`} stroke={section.color} strokeWidth="1" strokeOpacity="0.3" />
+                        <ellipse cx={x + NODE_W / 2} cy={y + NODE_H - 6} rx={NODE_W / 2} ry={6} fill={`${section.color}0A`} stroke={section.color} strokeWidth="1" strokeOpacity="0.3" />
+                      </>
+                    ) : (
+                      <rect x={x} y={y} width={NODE_W} height={NODE_H} rx={rx} fill={`url(#tsgrad-${section.key})`} stroke={section.color} strokeWidth="1" strokeOpacity="0.3" />
+                    )}
+
+                    {/* Layer label */}
+                    <text x={x + 10} y={y + 18} fontSize="9" fill="#606080" fontFamily="system-ui, sans-serif">
+                      {item.layer.length > 20 ? item.layer.slice(0, 18) + "…" : item.layer}
+                    </text>
+
+                    {/* Tech name */}
+                    <text x={x + 10} y={y + 34} fontSize="12" fontWeight="600" fill="#e4e4ec" fontFamily="system-ui, sans-serif">
+                      {item.tech.length > 22 ? item.tech.slice(0, 20) + "…" : item.tech}
+                    </text>
+
+                    {/* Reason tooltip-ish sublabel */}
+                    <text x={x + 10} y={y + 48} fontSize="9" fill="#505060" fontFamily="system-ui, sans-serif">
+                      {item.reason.length > 26 ? item.reason.slice(0, 24) + "…" : item.reason}
+                    </text>
+                  </g>
+                );
+              })}
+            </g>
+          );
+        })}
+      </svg>
+    </div>
   );
 }

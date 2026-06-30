@@ -23,8 +23,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
     }
 
-    // Check if this is the admin
-    const isAdmin = email === "admin@blueprints.nirvatec.com";
+    // Check if this is the admin (any admin-prefixed email)
+    const isAdmin = email.startsWith("admin@");
     const token = await createSession(client.id, isAdmin);
 
     // Update last login

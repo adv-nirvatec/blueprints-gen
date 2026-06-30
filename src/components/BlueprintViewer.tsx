@@ -165,8 +165,6 @@ function ArchitectureTab({ content }: { content: any }) {
   const paragraphs = overview.split("\n").filter(Boolean);
   const mainText = paragraphs.filter((p: string) => !p.match(/^[┌└│├─┐┘┴┬┤┼]/));
 
-  const layers = parseArchitectureLayers(overview, diagram);
-
   return (
     <div className="space-y-5">
       <div className="text-sm text-[#c4c4d8] leading-relaxed">
@@ -175,13 +173,7 @@ function ArchitectureTab({ content }: { content: any }) {
         ))}
       </div>
 
-      {layers.length > 0 ? (
-        <ArchitectureDiagram layers={layers} />
-      ) : diagram ? (
-        <pre className="rounded-xl bg-[#0a0a0f] border border-[#1e1e2e] p-5 text-[10px] sm:text-xs font-mono text-[#10b981] overflow-x-auto leading-tight">
-          {diagram}
-        </pre>
-      ) : null}
+      <ArchitectureSvg overview={overview} diagram={diagram} />
 
       {mainText.length > 2 && (
         <div className="rounded-xl border border-[#1e1e2e] bg-[#0a0a0f]/60 p-4">
@@ -194,7 +186,7 @@ function ArchitectureTab({ content }: { content: any }) {
         </div>
       )}
 
-      {diagram && layers.length > 0 && (
+      {diagram && (
         <details className="mt-2">
           <summary className="text-[10px] text-[#606080] cursor-pointer hover:text-[#9090a8]">View raw diagram</summary>
           <pre className="mt-2 rounded-lg bg-[#0a0a0f] border border-[#1e1e2e] p-4 text-[10px] font-mono text-[#10b981] overflow-x-auto leading-tight">
@@ -208,87 +200,376 @@ function ArchitectureTab({ content }: { content: any }) {
 
 /* ─── Architecture Layer Parser + Visual Diagram ─── */
 
-function parseArchitectureLayers(overview: string, diagram: string) {
-  const layers: { name: string; icon: string; color: string; components: { name: string; detail: string }[] }[] = [];
+/* ─── Architecture Component Parser ─── */
 
-  const layerDefs = [
-    { match: /(?:frontend|client|browser|web app|dashboard|next\.?js|react|tailwind|css)/i, name: "Frontend", icon: "🎨", color: "#8b5cf6" },
-    { match: /(?:backend|api|server|express|node|service|route|next\.?js route)/i, name: "Backend", icon: "⚙️", color: "#06b6d4" },
-    { match: /(?:database|postgresql|postgres|sql|data|storage|db|pgvector)/i, name: "Database", icon: "🗄️", color: "#f97316" },
-    { match: /(?:nginx|proxy|reverse|ssl|tls|cert|traffic|load|domain)/i, name: "Proxy", icon: "🔀", color: "#10b981" },
-    { match: /(?:docker|container|compose|orchestrat|deploy)/i, name: "Orchestration", icon: "🐳", color: "#06b6d4" },
-    { match: /(?:auth|login|jwt|session|password|oauth|nextauth|clerk|bcrypt)/i, name: "Auth", icon: "🔐", color: "#f59e0b" },
-    { match: /(?:email|notification|sms|queue|event|inngest|resend|twilio|workflow)/i, name: "Messaging", icon: "📨", color: "#ec4899" },
-    { match: /(?:monitor|analytics|log|metric|plausible|grafana|sentry)/i, name: "Monitoring", icon: "📊", color: "#f59e0b" },
-    { match: /(?:lighthouse|server|hosting|cloud|infra|tencent|ubuntu)/i, name: "Infrastructure", icon: "☁️", color: "#6366f1" },
-    { match: /(?:payment|stripe|billing|subscription|checkout)/i, name: "Payments", icon: "💳", color: "#14b8a6" },
-    { match: /(?:cdn|storage|s3|r2|upload|file|image|bucket)/i, name: "Storage", icon: "📦", color: "#eab308" },
-    { match: /(?:cache|redis|memcached|queue|bull)/i, name: "Cache", icon: "⚡", color: "#ef4444" },
-    { match: /(?:search|elastic|algolia|typesense|meilisearch)/i, name: "Search", icon: "🔍", color: "#a855f7" },
-    { match: /(?:ai|llm|openai|deepseek|gpt|embedding|machine learn)/i, name: "AI / ML", icon: "🧠", color: "#d946ef" },
-  ];
-
-  const allText = overview + "\n" + diagram;
-  const lines = allText.split("\n").filter(Boolean);
-
-  for (const def of layerDefs) {
-    const relevantLines = lines.filter((line: string) => def.match.test(line));
-    if (relevantLines.length === 0) continue;
-
-    const components = relevantLines.slice(0, 4).map((line: string) => {
-      const cleaned = line.replace(/^[┌└│├─┐┘┴┬┤┼\s]+/, "").trim();
-      const detail = cleaned.length > 60 ? cleaned.slice(0, 60) + "..." : cleaned;
-      return { name: cleaned.slice(0, 30), detail };
-    });
-
-    const existing = layers.find((l) => l.name === def.name);
-    if (existing) {
-      existing.components.push(...components);
-    } else {
-      layers.push({ name: def.name, icon: def.icon, color: def.color, components: components.slice(0, 3) });
-    }
-  }
-
-  if (layers.length === 0 && diagram) {
-    const diagramLines = diagram.split("\n").filter((l: string) => l.trim() && !l.match(/^[┌└│├─┐┘┴┬┤┼\s]+$/));
-    const genericComponents = diagramLines.slice(0, 8).map((line: string) => ({
-      name: line.replace(/^[^a-zA-Z0-9]+/, "").trim().slice(0, 30),
-      detail: line.replace(/^[^a-zA-Z0-9]+/, "").trim().slice(0, 60),
-    }));
-    if (genericComponents.length > 0) {
-      layers.push({ name: "Architecture", icon: "🏗️", color: "#6C63FF", components: genericComponents });
-    }
-  }
-
-  return layers;
+interface ArchNode {
+  id: string;
+  label: string;
+  sublabel: string;
+  type: "entry" | "proxy" | "app" | "database" | "service" | "external" | "infra" | "auth" | "queue" | "storage" | "ai";
+  color: string;
+  icon: string;
 }
 
-function ArchitectureDiagram({ layers }: { layers: any[] }) {
+interface ArchEdge {
+  from: string;
+  to: string;
+  label?: string;
+}
+
+const NODE_STYLES: Record<string, { color: string; icon: string; shape: string }> = {
+  entry:    { color: "#6C63FF", icon: "🌐", shape: "rounded" },
+  proxy:    { color: "#10b981", icon: "🔀", shape: "hexagon" },
+  app:      { color: "#8b5cf6", icon: "🖥️", shape: "rounded" },
+  database: { color: "#f97316", icon: "🗄️", shape: "cylinder" },
+  service:  { color: "#06b6d4", icon: "⚙️", shape: "pill" },
+  external: { color: "#ec4899", icon: "☁️", shape: "cloud" },
+  infra:    { color: "#6366f1", icon: "🐳", shape: "dashed" },
+  auth:     { color: "#f59e0b", icon: "🔐", shape: "rounded" },
+  queue:    { color: "#ef4444", icon: "📨", shape: "pill" },
+  storage:  { color: "#eab308", icon: "📦", shape: "cylinder" },
+  ai:       { color: "#d946ef", icon: "🧠", shape: "cloud" },
+};
+
+function parseArchitecture(overview: string, diagram: string): { nodes: ArchNode[]; edges: ArchEdge[] } {
+  const allText = (overview + "\n" + diagram).toLowerCase();
+  const nodes: ArchNode[] = [];
+  const edges: ArchEdge[] = [];
+  let nodeIdx = 0;
+
+  const addNode = (type: ArchNode["type"], label: string, sublabel: string = "") => {
+    // Deduplicate by label prefix
+    if (nodes.some(n => n.label === label)) return;
+    const style = NODE_STYLES[type];
+    nodes.push({ id: `n${nodeIdx++}`, label, sublabel, type, color: style.color, icon: style.icon });
+  };
+
+  const addEdge = (fromLabel: string, toLabel: string, edgeLabel?: string) => {
+    const fromN = nodes.find(n => n.label === fromLabel);
+    const toN = nodes.find(n => n.label === toLabel);
+    if (fromN && toN && !edges.some(e => e.from === fromN.id && e.to === toN.id)) {
+      edges.push({ from: fromN.id, to: toN.id, label: edgeLabel });
+    }
+  };
+
+  // Detect components from text
+  const hasText = (words: string[]) => words.some(w => allText.includes(w));
+
+  // Infrastructure shell
+  addNode("infra", "Tencent Lighthouse", "Ubuntu 24.04");
+
+  // Entry: Nginx / proxy
+  if (hasText(["nginx", "reverse proxy", "proxy"])) {
+    addNode("entry", "Nginx Reverse Proxy", "SSL • HTTPS • Routing");
+  } else {
+    addNode("entry", "HTTPS Entry", "SSL Termination");
+  }
+
+  // App: Next.js / web framework
+  if (hasText(["next.js", "nextjs", "next"])) {
+    addNode("app", "Next.js App", "SSR • Pages • API");
+  } else if (hasText(["react", "vue", "svelte"])) {
+    addNode("app", "Web Application", "Frontend + API");
+  } else {
+    addNode("app", "Application Server", "Business Logic");
+  }
+
+  // Database
+  if (hasText(["postgresql", "postgres", "pg"])) {
+    addNode("database", "PostgreSQL", "Primary Database");
+  } else if (hasText(["mysql", "mariadb"])) {
+    addNode("database", "MySQL", "Primary Database");
+  } else if (hasText(["mongodb", "mongo"])) {
+    addNode("database", "MongoDB", "Document Store");
+  } else if (hasText(["sqlite"])) {
+    addNode("database", "SQLite", "Embedded Database");
+  } else if (hasText(["database", "db", "data"])) {
+    addNode("database", "Database", "Data Storage");
+  }
+
+  // Auth
+  if (hasText(["nextauth", "clerk", "auth0", "oauth", "jwt", "bcrypt", "password"])) {
+    addNode("auth", "Authentication", "JWT • Sessions • OAuth");
+  }
+
+  // Background jobs / queue
+  if (hasText(["inngest", "bull", "queue", "background", "cron"])) {
+    addNode("queue", "Background Jobs", "Queues • Cron • Events");
+  } else if (hasText(["resend", "email", "notification"])) {
+    addNode("queue", "Email Service", "Transactional • Notifications");
+  }
+
+  // External APIs
+  if (hasText(["stripe", "payment"])) {
+    addNode("external", "Stripe", "Payments");
+  }
+  if (hasText(["amadeus", "sabre", "travelport"])) {
+    addNode("external", "Amadeus API", "Flights • Hotels");
+  }
+  if (hasText(["mapbox", "google maps", "leaflet"])) {
+    addNode("external", "Maps API", "Geolocation");
+  }
+  if (hasText(["twilio", "sendgrid", "resend"])) {
+    addNode("external", "Email / SMS API", "Notifications");
+  }
+  if (hasText(["openai", "deepseek", "anthropic", "gpt", "llm"])) {
+    addNode("ai", "AI / LLM API", "GPT • Claude • DeepSeek");
+  }
+  if (hasText(["s3", "r2", "cloudflare", "cdn", "upload"])) {
+    addNode("storage", "Object Storage", "S3 • R2 • CDN");
+  }
+
+  // Fill component details from the actual text
+  for (const node of nodes) {
+    const nameLower = node.label.toLowerCase();
+    const matchingLines = allText.split("\n").filter(l => l.toLowerCase().includes(nameLower.split(" ")[0]));
+    if (matchingLines.length > 0) {
+      // Use the most descriptive line
+      const best = matchingLines.sort((a, b) => b.length - a.length)[0];
+      const cleaned = best.replace(/^[┌└│├─┐┘┴┬┤┼\s]+/, "").trim().slice(0, 50);
+      if (cleaned.length > node.label.length + 3) {
+        node.sublabel = cleaned;
+      }
+    }
+  }
+
+  // Build edges: flow from entry → proxy → app → database + external
+  const entryNode = nodes.find(n => n.type === "entry" || n.type === "infra");
+  const proxyNode = nodes.find(n => n.type === "entry");
+  const appNode = nodes.find(n => n.type === "app");
+  const dbNode = nodes.find(n => n.type === "database");
+  const infraNode = nodes.find(n => n.type === "infra");
+  const authNode = nodes.find(n => n.type === "auth");
+  const queueNode = nodes.find(n => n.type === "queue");
+
+  // Core flow
+  if (infraNode && proxyNode) addEdge(infraNode.label, proxyNode.label, "routes");
+  if (proxyNode && appNode) addEdge(proxyNode.label, appNode.label, "proxies");
+  if (appNode && dbNode) addEdge(appNode.label, dbNode.label, "queries");
+  if (appNode && authNode) addEdge(appNode.label, authNode.label, "authenticates");
+  if (appNode && queueNode) addEdge(appNode.label, queueNode.label, "enqueues");
+
+  // External integrations
+  for (const node of nodes) {
+    if (node.type === "external" || node.type === "ai" || node.type === "storage") {
+      if (appNode) addEdge(appNode.label, node.label, "calls");
+    }
+  }
+
+  // Fallback: parse from diagram ASCII structure
+  if (nodes.length <= 1 && diagram) {
+    const lines = diagram.split("\n").filter(l => {
+      const t = l.replace(/[┌└│├─┐┘┴┬┤┼\s]+/g, "").trim();
+      return t.length > 2;
+    });
+    lines.slice(0, 10).forEach((line, i) => {
+      const cleaned = line.replace(/^[^a-zA-Z0-9]+/, "").trim().slice(0, 30);
+      if (cleaned) addNode("service", cleaned);
+    });
+  }
+
+  return { nodes, edges };
+}
+
+/* ─── SVG Architecture Diagram ─── */
+
+function ArchitectureSvg({ overview, diagram }: { overview: string; diagram: string }) {
+  const { nodes, edges } = parseArchitecture(overview, diagram);
+
+  if (nodes.length === 0) {
+    return diagram ? (
+      <pre className="rounded-xl bg-[#0a0a0f] border border-[#1e1e2e] p-5 text-[10px] sm:text-xs font-mono text-[#10b981] overflow-x-auto leading-tight">
+        {diagram}
+      </pre>
+    ) : null;
+  }
+
+  // Layout: vertical stack with connections
+  const PADDING_X = 20;
+  const PADDING_Y = 20;
+  const NODE_W = 170;
+  const NODE_H = 62;
+  const GAP = 20;
+  const EDGE_LABEL_OFFSET = 16;
+
+  // Group nodes by type for layout
+  const layout = computeLayout(nodes, edges);
+  const { positions, svgW, svgH } = layout;
+
   return (
-    <div className="space-y-2">
-      {layers.map((layer, i) => (
-        <div key={i} className="rounded-xl border overflow-hidden" style={{ borderColor: `${layer.color}30` }}>
-          <div className="flex items-center gap-2 px-4 py-2.5" style={{ background: `${layer.color}10` }}>
-            <span className="text-sm">{layer.icon}</span>
-            <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: layer.color }}>
-              {layer.name}
-            </span>
-            <span className="ml-auto text-[10px] text-[#606080]">{layer.components.length} component{layer.components.length !== 1 ? "s" : ""}</span>
-          </div>
-          <div className="p-3 space-y-1.5 bg-[#0a0a0f]/60">
-            {layer.components.map((comp: any, j: number) => (
-              <div key={j} className="flex items-center gap-2 rounded-lg px-3 py-1.5 text-[11px] bg-[#111118] border border-[#1e1e2e] hover:border-opacity-50 transition-all">
-                <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: layer.color }} />
-                <span className="text-white font-medium truncate">{comp.name}</span>
-                {comp.detail !== comp.name && (
-                  <span className="text-[#606080] truncate hidden sm:inline">{comp.detail}</span>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      ))}
+    <div className="overflow-x-auto">
+      <svg
+        viewBox={`0 0 ${svgW} ${svgH}`}
+        className="w-full"
+        style={{ minWidth: Math.min(svgW, 600), maxWidth: svgW }}
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          {/* Gradients */}
+          {nodes.map(n => (
+            <linearGradient key={`g-${n.id}`} id={`grad-${n.id}`} x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor={n.color} stopOpacity="0.25" />
+              <stop offset="100%" stopColor={n.color} stopOpacity="0.08" />
+            </linearGradient>
+          ))}
+          {/* Arrow marker */}
+          <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#404060" />
+          </marker>
+          {/* Shadow filter */}
+          <filter id="nodeShadow" x="-10%" y="-10%" width="120%" height="130%">
+            <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#000" floodOpacity="0.4" />
+          </filter>
+        </defs>
+
+        {/* Edges */}
+        {edges.map((edge, i) => {
+          const from = positions[edge.from];
+          const to = positions[edge.to];
+          if (!from || !to) return null;
+          return (
+            <g key={`e-${i}`}>
+              <line
+                x1={from.x + NODE_W / 2}
+                y1={from.y + NODE_H}
+                x2={to.x + NODE_W / 2}
+                y2={to.y}
+                stroke="#303050"
+                strokeWidth="2"
+                strokeDasharray={edge.label === "calls" ? "6 3" : "0"}
+                markerEnd={edge.label ? "url(#arrowhead)" : undefined}
+              />
+              {edge.label && (
+                <text
+                  x={to.x + NODE_W / 2}
+                  y={to.y - EDGE_LABEL_OFFSET / 2}
+                  textAnchor="middle"
+                  className="text-[9px]"
+                  fill="#606080"
+                  fontFamily="monospace"
+                >
+                  {edge.label}
+                </text>
+              )}
+            </g>
+          );
+        })}
+
+        {/* Nodes */}
+        {nodes.map(n => {
+          const pos = positions[n.id];
+          if (!pos) return null;
+          const style = NODE_STYLES[n.type];
+          return <ArchNodeShape key={n.id} node={n} pos={pos} w={NODE_W} h={NODE_H} />;
+        })}
+      </svg>
     </div>
+  );
+}
+
+function computeLayout(nodes: ArchNode[], edges: ArchEdge[]) {
+  // Sort nodes: infra → entry → proxy → app → auth/db → services → external
+  const order = ["infra", "entry", "proxy", "app", "auth", "database", "queue", "service", "storage", "external", "ai"];
+  const sorted = [...nodes].sort((a, b) => order.indexOf(a.type) - order.indexOf(b.type));
+
+  const NODE_W = 170;
+  const NODE_H = 62;
+  const PAD = 20;
+  const GAP = 24;
+
+  // Group nodes into rows by type
+  const rows: ArchNode[][] = [];
+  const seen = new Set<string>();
+  for (const t of order) {
+    const group = sorted.filter(n => n.type === t && !seen.has(n.id));
+    group.forEach(n => seen.add(n.id));
+    if (group.length > 0) rows.push(group);
+  }
+  // Catch any unplaced
+  const remaining = sorted.filter(n => !seen.has(n.id));
+  if (remaining.length > 0) rows.push(remaining);
+
+  const positions: Record<string, { x: number; y: number }> = {};
+  let y = PAD;
+  const maxRowWidth = Math.max(...rows.map(r => r.length * NODE_W + (r.length - 1) * GAP));
+  const svgW = maxRowWidth + PAD * 2;
+
+  for (const row of rows) {
+    const totalW = row.length * NODE_W + (row.length - 1) * GAP;
+    let x = (svgW - totalW) / 2;
+    for (const node of row) {
+      positions[node.id] = { x, y };
+      x += NODE_W + GAP;
+    }
+    y += NODE_H + GAP;
+  }
+
+  const svgH = y - GAP + PAD;
+  return { positions, svgW, svgH };
+}
+
+function ArchNodeShape({ node, pos, w, h }: { node: ArchNode; pos: { x: number; y: number }; w: number; h: number }) {
+  const { x, y } = pos;
+  const rx = 10;
+  const style = NODE_STYLES[node.type];
+  const isCylinder = style.shape === "cylinder";
+  const isCloud = style.shape === "cloud";
+  const isDashed = style.shape === "dashed";
+  const isPill = style.shape === "pill";
+  const pillRx = isPill ? h / 2 : rx;
+
+  return (
+    <g filter="url(#nodeShadow)">
+      {/* Node body */}
+      {isCloud ? (
+        <CloudShape x={x} y={y} w={w} h={h} color={node.color} />
+      ) : isCylinder ? (
+        <>
+          <ellipse cx={x + w / 2} cy={y + 8} rx={w / 2} ry={8} fill={`${node.color}15`} stroke={node.color} strokeWidth="1.5" strokeOpacity="0.4" />
+          <rect x={x} y={y + 8} width={w} height={h - 16} fill={`url(#grad-${node.id})`} stroke={node.color} strokeWidth="1.5" strokeOpacity="0.4" strokeDasharray={isDashed ? "4 3" : "0"} />
+          <ellipse cx={x + w / 2} cy={y + h - 8} rx={w / 2} ry={8} fill={`${node.color}12`} stroke={node.color} strokeWidth="1.5" strokeOpacity="0.4" />
+          <path d={`M ${x} ${y + 8} A ${w / 2} 8 0 0 0 ${x + w} ${y + 8}`} fill="none" stroke={node.color} strokeWidth="1" strokeOpacity="0.3" />
+        </>
+      ) : (
+        <rect
+          x={x}
+          y={y}
+          width={w}
+          height={h}
+          rx={pillRx}
+          fill={`url(#grad-${node.id})`}
+          stroke={node.color}
+          strokeWidth="1.5"
+          strokeOpacity="0.4"
+          strokeDasharray={isDashed ? "5 3" : "0"}
+        />
+      )}
+
+      {/* Icon */}
+      <text x={x + 14} y={y + h / 2 + 2} fontSize="16" textAnchor="middle" dominantBaseline="middle">
+        {node.icon}
+      </text>
+
+      {/* Label */}
+      <text x={x + 34} y={y + h / 2 - 6} fontSize="11" fontWeight="600" fill="#e4e4ec" fontFamily="system-ui, sans-serif">
+        {node.label.length > 20 ? node.label.slice(0, 18) + "…" : node.label}
+      </text>
+
+      {/* Sublabel */}
+      {node.sublabel && (
+        <text x={x + 34} y={y + h / 2 + 10} fontSize="9" fill="#606080" fontFamily="system-ui, sans-serif">
+          {node.sublabel.length > 24 ? node.sublabel.slice(0, 22) + "…" : node.sublabel}
+        </text>
+      )}
+    </g>
+  );
+}
+
+function CloudShape({ x, y, w, h, color }: { x: number; y: number; w: number; h: number; color: string }) {
+  return (
+    <g>
+      <rect x={x} y={y} width={w} height={h} rx={h / 2} fill={`${color}10`} stroke={color} strokeWidth="1.5" strokeOpacity="0.4" strokeDasharray="4 3" />
+    </g>
   );
 }
 

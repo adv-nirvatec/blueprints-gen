@@ -3,14 +3,21 @@ services:
     container_name: blueprints-app
     build: .
     restart: unless-stopped
-    network_mode: host
+    ports:
+      - "127.0.0.1:3012:3000"
     env_file: .env
     environment:
       - NODE_ENV=production
-      - PORT=3012
+      - PORT=3000
       - HOSTNAME=0.0.0.0
+    networks:
+      - spawnpoint_spawnpoint
     logging:
       driver: json-file
       options:
         max-size: "10m"
         max-file: "3"
+
+networks:
+  spawnpoint_spawnpoint:
+    external: true

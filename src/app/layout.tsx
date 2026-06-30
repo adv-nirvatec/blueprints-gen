@@ -7,7 +7,7 @@ const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-space
 
 export const metadata: Metadata = {
   title: "Blueprint Generator — Turn Your App Idea Into a Build Plan",
-  description: "Describe your app idea and get an instant tech stack blueprint. Built by Nirvatec Industries.",
+  description: "Describe your app idea and get an instant tech stack blueprint. Built by FailFast.",
   icons: { icon: "/favicon.svg" },
 };
 

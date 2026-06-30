@@ -113,13 +113,13 @@ export async function POST(req: NextRequest) {
 
           <p style="color: #606080; font-size: 11px; margin: 20px 0 0; text-align: center;">
             You can change your password after logging in.<br>
-            Questions? Reply to this email or contact adv@nirvatec.com
+            Questions? Reply to this email and a team member will get back to you.
           </p>
         </div>
 
         <div style="text-align: center; margin-top: 24px;">
           <p style="color: #404050; font-size: 11px;">
-            FailFast Blueprints · Built by <span style="color: #6C63FF;">Nirvatec Industries</span>
+            FailFast Blueprints
           </p>
         </div>
       </div>

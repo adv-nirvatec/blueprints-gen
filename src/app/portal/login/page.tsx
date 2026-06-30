@@ -92,7 +92,7 @@ export default function LoginPage() {
           <p className="text-center text-xs text-[#606080]">
             Don&apos;t have an account?{" "}
             <span className="text-[#9090a8]">
-              A Nirvatec team member will create one for you during your consult.
+              A FailFast team member will create one for you during your consult.
             </span>
           </p>
         </form>

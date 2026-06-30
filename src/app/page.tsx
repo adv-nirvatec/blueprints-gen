@@ -606,11 +606,11 @@ function BlueprintResultCard({ result, form }: { result: BlueprintResult; form: 
           <h4 className="text-lg font-bold text-white mb-2">Want the Full Blueprint?</h4>
           <p className="text-sm text-[#a5a0ff] mb-4 max-w-md mx-auto">
             Get complete architecture docs, database schema, API design, build phases, and expert guidance 
-            from the Nirvatec team.
+            from the FailFast team.
           </p>
           <div className="flex items-center justify-center gap-3 flex-wrap">
             <a
-              href={`mailto:adv@nirvatec.com?subject=Blueprint Consult: ${encodeURIComponent(form.appName)}`}
+              href={`mailto:admin@failfast.online?subject=Blueprint Consult: ${encodeURIComponent(form.appName)}`}
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-white font-semibold transition-all duration-200"
               style={{ background: "linear-gradient(135deg, #6C63FF, #7b73ff)" }}
             >
@@ -639,14 +639,14 @@ function Footer() {
     <footer className="border-t border-[#1e1e2e] py-10">
       <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-2 text-sm text-[#9090a8]">
-          <span className="text-[#6C63FF] font-bold">Nirvatec</span>
-          <span>Industries</span>
+          <span className="text-[#6C63FF] font-bold">FailFast</span>
+          <span>Blueprints</span>
         </div>
         <div className="flex items-center gap-6 text-sm text-[#606080]">
           <Link href="/portal/login" className="hover:text-[#a5a0ff] transition-colors">
             Client Portal
           </Link>
-          <a href="mailto:adv@nirvatec.com" className="hover:text-[#a5a0ff] transition-colors">
+          <a href="mailto:admin@failfast.online" className="hover:text-[#a5a0ff] transition-colors">
             Contact
           </a>
         </div>

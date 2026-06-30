@@ -192,6 +192,8 @@ function GeneratorSection() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<BlueprintResult | null>(null);
   const [error, setError] = useState("");
+  const [consultSent, setConsultSent] = useState(false);
+  const [sendingConsult, setSendingConsult] = useState(false);
   const resultRef = useRef<HTMLDivElement>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -235,6 +237,30 @@ function GeneratorSection() {
       setError(err.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleConsultRequest = async () => {
+    if (!result) return;
+    setSendingConsult(true);
+    try {
+      await fetch("/api/notify-consult", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          appName: form.appName,
+          appDescription: form.appDescription,
+          industry: form.industry || undefined,
+          clientName: form.clientName || undefined,
+          clientEmail: form.clientEmail || undefined,
+          blueprintId: result.blueprintId,
+        }),
+      });
+      setConsultSent(true);
+    } catch {
+      // silent fail — mailto fallback available
+    } finally {
+      setSendingConsult(false);
     }
   };
 
@@ -431,7 +457,7 @@ function GeneratorSection() {
         <div className="lg:col-span-3" ref={resultRef}>
           {!result && !loading && <EmptyPreview />}
           {loading && <LoadingPreview form={form} />}
-          {result && <BlueprintResultCard result={result} form={form} />}
+          {result && <BlueprintResultCard result={result} form={form} consultSent={consultSent} sendingConsult={sendingConsult} onConsultRequest={handleConsultRequest} />}
         </div>
       </div>
     </section>
@@ -495,7 +521,7 @@ function LoadingPreview({ form }: { form: any }) {
 
 /* ─── Blueprint Result ─── */
 
-function BlueprintResultCard({ result, form }: { result: BlueprintResult; form: any }) {
+function BlueprintResultCard({ result, form, consultSent, sendingConsult, onConsultRequest }: { result: BlueprintResult; form: any; consultSent: boolean; sendingConsult: boolean; onConsultRequest: () => void }) {
   const { techStack, blueprintDocuments } = result;
   const sections = Object.entries(techStack)
     .filter(([key]) => Array.isArray(techStack[key as keyof TechStack]))
@@ -609,13 +635,20 @@ function BlueprintResultCard({ result, form }: { result: BlueprintResult; form: 
             from the FailFast team.
           </p>
           <div className="flex items-center justify-center gap-3 flex-wrap">
-            <a
-              href={`mailto:admin@failfast.online?subject=Blueprint Consult: ${encodeURIComponent(form.appName)}`}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-white font-semibold transition-all duration-200"
-              style={{ background: "linear-gradient(135deg, #6C63FF, #7b73ff)" }}
-            >
-              📧 Request a Consult
-            </a>
+            {consultSent ? (
+              <div className="rounded-xl bg-[#10b981]/10 border border-[#10b981]/30 px-5 py-3 text-sm text-[#10b981] font-medium">
+                ✅ Request sent! We will reach out within 1–2 business days.
+              </div>
+            ) : (
+              <button
+                onClick={onConsultRequest}
+                disabled={sendingConsult}
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-white font-semibold transition-all duration-200 disabled:opacity-60"
+                style={{ background: "linear-gradient(135deg, #6C63FF, #7b73ff)" }}
+              >
+                {sendingConsult ? "Sending..." : "📧 Request a Consult"}
+              </button>
+            )}
             <span className="text-sm text-[#9090a8]">
               or{" "}
               <Link href="/portal/login" className="text-[#6C63FF] hover:text-[#a5a0ff] underline underline-offset-2">

@@ -83,11 +83,14 @@ async function callVision(base64Image: string, prompt: string): Promise<string> 
 }
 
 async function takeScreenshot(url: string): Promise<string | null> {
-  // Try multiple free screenshot APIs
   const encoded = encodeURIComponent(url);
+  
+  // Browserless / screenshot API options — try multiple
   const sources = [
-    // thum.io — free, no auth needed
-    `https://image.thum.io/get/width/1024/crop/768/${encoded}`,
+    // sshot.ru — free, simple
+    `https://sshot.ru/api/v1/screenshot?url=${encoded}&width=1024&height=768&format=png`,
+    // mini.s-shot.ru — alternative
+    `https://mini.s-shot.ru/1024x768/PNG/1024/${encoded}`,
   ];
   
   for (const source of sources) {
@@ -99,16 +102,13 @@ async function takeScreenshot(url: string): Promise<string | null> {
       clearTimeout(timeout);
       
       if (res.ok) {
-        const contentType = res.headers.get("content-type") || "";
-        if (contentType.includes("image")) {
-          const buffer = Buffer.from(await res.arrayBuffer());
+        const buffer = Buffer.from(await res.arrayBuffer());
+        if (buffer.length > 1000) {
           console.log(`[takeScreenshot] Success: ${buffer.length} bytes`);
           return buffer.toString("base64");
         }
-        console.log(`[takeScreenshot] Response not image: ${contentType}`);
-      } else {
-        console.log(`[takeScreenshot] HTTP ${res.status} from ${source.slice(0, 60)}`);
       }
+      console.log(`[takeScreenshot] HTTP ${res.status} from source, len=${(await res.text().catch(()=>'')).length}`);
     } catch (e: any) {
       console.log(`[takeScreenshot] Error: ${e.message}`);
     }

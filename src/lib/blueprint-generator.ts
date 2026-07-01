@@ -21,37 +21,55 @@ interface BlueprintInput {
 }
 
 export async function generateBlueprint(input: BlueprintInput) {
-  const systemPrompt = `You are a senior solution architect at Nirvatec Industries. Your job is to produce detailed, actionable app blueprints for non-technical founders.
+  const systemPrompt = `You are a senior solution architect at FailFast. Your job is to produce detailed, actionable app blueprints for non-technical founders.
 
 CRITICAL INFRASTRUCTURE CONSTRAINT: All apps are deployed on Tencent Cloud Lighthouse servers (Ubuntu 24.04, Docker, Nginx). NEVER recommend Vercel, Netlify, Supabase, Railway, Heroku, or any PaaS platform. Self-host everything on Lighthouse with Docker. Use PostgreSQL (not hosted DB services). Use systemd or Docker Compose for orchestration. The stack must be deployable with a single 'docker compose up -d --build'.
 
-Given a founder's app description, produce a BLUEPRINT with TWO output sections:
+CRITICAL — APP-SPECIFIC TECH: Do NOT recommend the same stack for every app. Match tech choices to the SPECIFIC features described. A pet telehealth app needs different tech than a fintech marketplace. Think about what each individual feature requires and recommend accordingly.
+
+Given a founder's app description, produce a BLUEPRINT with THREE output sections:
 
 ## SECTION 1: TECH STACK (VISIBLE TO USER)
-A highly detailed, visually structured tech stack card. This is what the user sees immediately.
-
-Format as a structured JSON object with these keys:
+A detailed tech stack. Match tech to the app's specific needs — DO NOT copy-paste generic stacks.
 
 {
   "techStack": {
-    "frontend": [{ "layer": "Framework", "tech": "Next.js 15", "reason": "One sentence why" }],
-    "backend": [{ "layer": "...", "tech": "...", "reason": "..." }],
-    "database": [{ "layer": "...", "tech": "...", "reason": "..." }],
+    "frontend": [{ "layer": "Framework", "tech": "<app-specific, e.g. Next.js 15, React Native, etc>", "reason": "Why this fits THIS app specifically" }],
+    "backend": [{ "layer": "...", "tech": "...", "reason": "Why this fits THIS app specifically" }],
+    "database": [{ "layer": "...", "tech": "...", "reason": "Why this fits THIS app specifically" }],
     "infrastructure": [{ "layer": "Hosting", "tech": "Tencent Cloud Lighthouse", "reason": "..." }, 
                        { "layer": "Reverse Proxy", "tech": "Nginx + Let's Encrypt", "reason": "..." },
                        { "layer": "Orchestration", "tech": "Docker Compose", "reason": "..." }],
-    "integrations": [{ "layer": "...", "tech": "...", "reason": "..." }],
+    "integrations": [{ "layer": "...", "tech": "...", "reason": "Why this fits THIS app specifically" }],
     "mvpCost": "Estimated monthly burn for MVP in USD (single number, e.g. '$35-50/mo')",
     "scaleUpCost": "Estimated monthly burn at scale in USD",
     "timeToMvp": "e.g. '4-6 weeks'",
-    "summarySentence": "One compelling sentence explaining the tech approach in plain English"
+    "summarySentence": "One compelling, app-specific sentence explaining the tech approach in plain English"
   }
 }
 
-## SECTION 2: FULL BLUEPRINT DOCUMENTS (TITLES ONLY — NOT SHOWN TO USER)
-These are section titles that will be listed but content is hidden behind consult gate.
+## SECTION 2: FEATURE-TO-TECH MAPPING (VISIBLE TO USER)
+Map each core feature to the specific technologies it needs. This shows HOW the tech stack actually serves the app.
 
-Return them as:
+{
+  "featureMap": [
+    {
+      "feature": "Feature name from the user's list",
+      "icon": "Single emoji best representing this feature",
+      "techNodes": ["PostgreSQL", "Next.js API routes", "Stripe API"],
+      "flow": "One sentence explaining how these technologies work together for this feature"
+    }
+  ]
+}
+
+RULES for featureMap:
+- Create one entry per user feature (max 6). Combine similar features.
+- Each techNodes array must reference tech names that appear in the techStack above.
+- Be specific — "PostgreSQL" not "database", "Next.js API routes" not "backend".
+- The flow field should be a short plain-English sentence connecting the dots.
+- The icon MUST be a single emoji, not text.
+
+## SECTION 3: FULL BLUEPRINT DOCUMENTS (TITLES ONLY — NOT SHOWN TO USER)
 {
   "blueprintDocuments": [
     { "title": "Architecture Overview", "description": "One line about what this doc covers" },
@@ -69,10 +87,15 @@ RULES:
 - NEVER recommend Vercel, Netlify, Supabase, Railway, Heroku, or any cloud PaaS.
 - Self-host everything: Docker + Nginx on Tencent Lighthouse.
 - PostgreSQL is self-hosted in Docker, not a service.
-- Match tech to the app's specific needs — don't copy-paste generic stacks.
-- The summarySentence MUST be compelling and non-technical.
+- MATCH TECH TO FEATURES — every recommendation should be traceable to a specific feature.
+- The summarySentence MUST be compelling, non-technical, and app-specific.
 - Keep reasons short — one sentence each max.
 - Output ONLY valid JSON — no markdown wrapping, no code blocks.`;
+
+  const features = input.coreFeatures || [];
+  const featuresList = features.length > 0
+    ? features.map((f, i) => `${i + 1}. ${f}`).join("\n")
+    : "As described";
 
   const userPrompt = `Generate a blueprint for the following app:
 
@@ -80,7 +103,8 @@ APP NAME: ${input.appName}
 DESCRIPTION: ${input.appDescription}
 INDUSTRY: ${input.industry || "General"}
 TARGET USERS: ${input.targetUsers || "General audience"}
-CORE FEATURES: ${(input.coreFeatures || []).join(", ") || "As described"}
+CORE FEATURES:
+${featuresList}
 ${input.constraints?.budget ? `BUDGET: ${input.constraints.budget}` : ""}
 ${input.constraints?.timeline ? `TIMELINE: ${input.constraints.timeline}` : ""}
 ${input.constraints?.platform ? `PLATFORM: ${input.constraints.platform}` : ""}
@@ -110,7 +134,7 @@ ${input.constraints?.scale ? `EXPECTED SCALE: ${input.constraints.scale}` : ""}`
 }
 
 export async function generateFullBlueprint(input: BlueprintInput, techStack: any) {
-  const systemPrompt = `You are a senior solution architect at Nirvatec Industries. You are generating the FULL blueprint documentation for a client.
+  const systemPrompt = `You are a senior solution architect at FailFast. You are generating the FULL blueprint documentation for a client.
 
 CRITICAL: All hosting is on Tencent Cloud Lighthouse (Docker + Nginx). Never mention Vercel, Supabase, Railway, or any PaaS. Self-host everything.
 

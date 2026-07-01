@@ -32,6 +32,14 @@ interface BlueprintResult {
   blueprintId: string;
   techStack: TechStack;
   blueprintDocuments: BlueprintDoc[];
+  featureMap?: FeatureMapEntry[];
+}
+
+interface FeatureMapEntry {
+  feature: string;
+  icon: string;
+  techNodes: string[];
+  flow: string;
 }
 
 /* ─── Color Palette ─── */
@@ -789,42 +797,27 @@ function LoadingPreview({ form }: { form: any }) {
 /* ─── Blueprint Result ─── */
 
 function BlueprintResultCard({ result, form, consultSent, sendingConsult, onConsultRequest }: { result: BlueprintResult; form: any; consultSent: boolean; sendingConsult: boolean; onConsultRequest: () => void }) {
-  const { techStack, blueprintDocuments } = result;
-  const sections = Object.entries(techStack)
-    .filter(([key]) => Array.isArray(techStack[key as keyof TechStack]))
-    .map(([key, value]) => ({
-      key,
-      label: key.charAt(0).toUpperCase() + key.slice(1),
-      icon: SECTION_ICONS[key] || "📦",
-      color: SECTION_COLORS[key] || COLORS.gold,
-      items: value as TechLayer[],
-    }));
+  const { techStack, blueprintDocuments, featureMap } = result;
 
   return (
     <div className="space-y-6">
-      {/* Tech Stack Card */}
+      {/* App Summary Card */}
       <div className={`rounded-2xl border overflow-hidden ${COLORS.border}`} style={{ background: "linear-gradient(135deg, #111118, #0d0d18)" }}>
-        {/* Header */}
         <div className="px-6 sm:px-8 py-6 border-b border-[#1e1e2e]">
-          <div className="flex items-center gap-3 mb-3">
+          <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#a855f7] to-[#ec4899] flex items-center justify-center text-lg">
               🧬
             </div>
             <div>
               <h3 className="text-lg font-bold text-white">{form.appName}</h3>
-              <p className="text-xs text-[#9090a8]">Tech Stack Blueprint</p>
+              <p className="text-xs text-[#d8b4fe]">Tech Stack Blueprint</p>
             </div>
           </div>
           <p className="text-sm text-[#c4c4d8] leading-relaxed">{techStack.summarySentence}</p>
         </div>
 
-        {/* SVG Tech Stack Diagram */}
-        <div className="px-4 sm:px-6 py-5">
-          <TechStackSvg sections={sections} />
-        </div>
-
         {/* Stats Bar */}
-        <div className="px-6 sm:px-8 py-5 border-t border-[#1e1e2e] bg-[#0a0a0f]/50">
+        <div className="px-6 sm:px-8 py-4 border-b border-[#1e1e2e] bg-[#0a0a0f]/50">
           <div className="grid grid-cols-3 gap-4 text-center">
             <div>
               <p className="text-xs text-[#606080] mb-0.5">MVP Cost</p>
@@ -840,6 +833,15 @@ function BlueprintResultCard({ result, form, consultSent, sendingConsult, onCons
             </div>
           </div>
         </div>
+
+        {/* Feature-to-Tech Map */}
+        {featureMap && featureMap.length > 0 ? (
+          <FeatureTechMap featureMap={featureMap} />
+        ) : (
+          <div className="px-6 sm:px-8 py-5">
+            <SimpleTechStack techStack={techStack} />
+          </div>
+        )}
       </div>
 
       {/* Blueprint Documents (Titles Only) */}
@@ -852,19 +854,29 @@ function BlueprintResultCard({ result, form, consultSent, sendingConsult, onCons
           </span>
         </div>
         <div className="space-y-3">
-          {blueprintDocuments.map((doc, i) => (
-            <div
-              key={i}
-              className={`flex items-start gap-3 rounded-xl border ${COLORS.border} bg-[#0a0a0f]/50 px-4 py-3`}
-            >
+          {blueprintDocuments.slice(0, 2).map((doc, i) => (
+            <div key={i} className="flex items-start gap-3 rounded-xl border border-[#10b981]/20 bg-[#10b981]/5 px-4 py-3">
+              <div className="w-8 h-8 rounded-lg bg-[#10b981]/10 flex items-center justify-center shrink-0 mt-0.5">
+                <svg className="w-4 h-4 text-[#10b981]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <div className="flex-1 min-w-0">
+                <h4 className="text-sm font-medium text-white">{doc.title}</h4>
+                <p className="text-xs text-[#9090a8] mt-0.5">{doc.description}</p>
+              </div>
+            </div>
+          ))}
+          {blueprintDocuments.slice(2).map((doc, i) => (
+            <div key={i} className="flex items-start gap-3 rounded-xl border border-[#1e1e2e] bg-[#0a0a0f]/50 px-4 py-3 opacity-50">
               <div className="w-8 h-8 rounded-lg bg-[#1e1e2e] flex items-center justify-center shrink-0 mt-0.5">
                 <svg className="w-4 h-4 text-[#606080]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
               </div>
               <div className="flex-1 min-w-0">
-                <h4 className="text-sm font-medium text-white">{doc.title}</h4>
-                <p className="text-xs text-[#606080] mt-0.5">{doc.description}</p>
+                <h4 className="text-sm font-medium text-[#606080]">{doc.title}</h4>
+                <p className="text-xs text-[#404060] mt-0.5">{doc.description}</p>
               </div>
             </div>
           ))}
@@ -908,6 +920,110 @@ function BlueprintResultCard({ result, form, consultSent, sendingConsult, onCons
   );
 }
 
+/* ─── Feature → Tech Map ─── */
+
+const FEATURE_ACCENTS = [
+  { color: "#a855f7", bg: "rgba(168,85,247,0.08)", border: "#a855f7" },
+  { color: "#ec4899", bg: "rgba(236,72,153,0.08)", border: "#ec4899" },
+  { color: "#10b981", bg: "rgba(16,185,129,0.08)", border: "#10b981" },
+  { color: "#06b6d4", bg: "rgba(6,182,212,0.08)", border: "#06b6d4" },
+  { color: "#f59e0b", bg: "rgba(245,158,11,0.08)", border: "#f59e0b" },
+  { color: "#f97316", bg: "rgba(249,115,22,0.08)", border: "#f97316" },
+];
+
+function FeatureTechMap({ featureMap }: { featureMap: FeatureMapEntry[] }) {
+  const allTech = Array.from(new Set(featureMap.flatMap((f) => f.techNodes)));
+  const techToFeatures: Record<string, number[]> = {};
+  allTech.forEach((tech) => {
+    techToFeatures[tech] = featureMap.map((f, i) => (f.techNodes.includes(tech) ? i : -1)).filter((i) => i >= 0);
+  });
+
+  return (
+    <div className="px-4 sm:px-6 py-5">
+      <p className="text-[10px] font-medium uppercase tracking-wider text-[#606080] mb-4 text-center">
+        How Your Features Connect to the Stack
+      </p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-5">
+        {featureMap.map((entry, i) => {
+          const accent = FEATURE_ACCENTS[i % FEATURE_ACCENTS.length];
+          return (
+            <div key={i} className="rounded-xl border px-4 py-3 text-sm transition-all duration-300 hover:-translate-y-0.5"
+              style={{ background: accent.bg, borderColor: `${accent.color}25` }}>
+              <div className="flex items-center gap-2 mb-1.5">
+                <span className="text-base">{entry.icon}</span>
+                <span className="text-xs font-semibold text-white">{entry.feature}</span>
+              </div>
+              <p className="text-[11px] text-[#9090a8] leading-relaxed">{entry.flow}</p>
+            </div>
+          );
+        })}
+      </div>
+      <div className="rounded-xl border border-[#1e1e2e]/60 bg-[#0a0a0f]/40 p-4">
+        <p className="text-[10px] font-medium uppercase tracking-wider text-[#606080] mb-3 text-center">
+          Technologies Powering This App
+        </p>
+        <div className="flex flex-wrap gap-2 justify-center">
+          {allTech.map((tech) => {
+            const featureIndices = techToFeatures[tech] || [];
+            const primaryAccent = featureIndices.length > 0
+              ? FEATURE_ACCENTS[featureIndices[0] % FEATURE_ACCENTS.length] : FEATURE_ACCENTS[0];
+            return (
+              <div key={tech} className="relative group"
+                title={`Used by: ${featureIndices.map((i) => featureMap[i].feature).join(", ")}`}>
+                <div className="rounded-lg px-3 py-1.5 text-xs font-medium transition-all duration-300 hover:shadow-md cursor-default"
+                  style={{ background: `${primaryAccent.color}15`, border: `1px solid ${primaryAccent.color}30`, color: primaryAccent.color }}>
+                  {tech}
+                </div>
+                {featureIndices.length > 1 && (
+                  <div className="absolute -top-1 -right-1 flex gap-0.5">
+                    {featureIndices.slice(0, 3).map((fi) => {
+                      const dotAccent = FEATURE_ACCENTS[fi % FEATURE_ACCENTS.length];
+                      return <span key={fi} className="w-1.5 h-1.5 rounded-full" style={{ background: dotAccent.color }} />;
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── Simple Tech Stack (fallback) ─── */
+
+function SimpleTechStack({ techStack }: { techStack: TechStack }) {
+  const sections = Object.entries(techStack)
+    .filter(([key]) => Array.isArray(techStack[key as keyof TechStack]))
+    .map(([key, value]) => ({
+      key, label: key.charAt(0).toUpperCase() + key.slice(1),
+      icon: SECTION_ICONS[key] || "📦", color: SECTION_COLORS[key] || COLORS.gold,
+      items: value as TechLayer[],
+    }));
+  if (sections.length === 0) return null;
+  return (
+    <div className="space-y-4">
+      {sections.map((section) => (
+        <div key={section.key}>
+          <h4 className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: section.color }}>
+            {section.icon} {section.label}
+          </h4>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {section.items.map((item, i) => (
+              <div key={i} className="rounded-lg border border-[#1e1e2e] bg-[#0a0a0f]/60 px-4 py-3">
+                <p className="text-xs text-[#9090a8]">{item.layer}</p>
+                <p className="text-sm font-semibold text-white">{item.tech}</p>
+                <p className="text-xs text-[#606080] mt-0.5">{item.reason}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 /* ─── Footer ─── */
 
 function Footer() {
@@ -927,107 +1043,5 @@ function Footer() {
         </div>
       </div>
     </footer>
-  );
-}
-
-/* ─── SVG Tech Stack Diagram ─── */
-
-function TechStackSvg({ sections }: { sections: { key: string; label: string; icon: string; color: string; items: { layer: string; tech: string; reason: string }[] }[] }) {
-  if (sections.length === 0) return null;
-
-  const NODE_W = 180;
-  const NODE_H = 64;
-  const GAP_X = 14;
-  const GAP_Y = 32;
-  const PAD = 14;
-  const LABEL_W = 82;
-  const LABEL_X = LABEL_W;
-
-  // Calculate SVG dimensions
-  const maxItems = Math.max(...sections.map(s => s.items.length));
-  const svgW = Math.max(640, maxItems * NODE_W + (maxItems - 1) * GAP_X + PAD * 2 + LABEL_W);
-  const svgH = sections.length * NODE_H + (sections.length - 1) * GAP_Y + PAD * 2;
-
-  return (
-    <div className="overflow-x-auto">
-      <svg viewBox={`0 0 ${svgW} ${svgH}`} className="w-full" xmlns="http://www.w3.org/2000/svg" style={{ minWidth: 520 }}>
-        <defs>
-          {sections.map(s => (
-            <linearGradient key={`g-${s.key}`} id={`tsgrad-${s.key}`} x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor={s.color} stopOpacity="0.2" />
-              <stop offset="100%" stopColor={s.color} stopOpacity="0.06" />
-            </linearGradient>
-          ))}
-          <filter id="ts-shadow">
-            <feDropShadow dx="0" dy="1.5" stdDeviation="2.5" floodColor="#000" floodOpacity="0.35" />
-          </filter>
-        </defs>
-
-        {/* Vertical guide lines for each section */}
-        {sections.map((section, row) => {
-          const labelCy = PAD + row * (NODE_H + GAP_Y) + NODE_H / 2;
-          return (
-            <line key={`guide-${row}`} x1={PAD} y1={labelCy + 8} x2={svgW - PAD} y2={labelCy + 8}
-              stroke={`${section.color}08`} strokeWidth="1" />
-          );
-        })}
-
-        {sections.map((section, row) => {
-          const y = PAD + row * (NODE_H + GAP_Y);
-          const isCylinder = section.key === "database";
-          const isCloud = section.key === "infrastructure" || section.key === "integrations";
-          const labelCy = y + NODE_H / 2;
-
-          return (
-            <g key={section.key}>
-              {/* Section label with background pill for readability */}
-              <rect x={PAD - 2} y={labelCy - 12} width={LABEL_W - 8} height={24} rx={8} fill={`${section.color}0A`} />
-              <text x={PAD + LABEL_W / 2 - 6} y={labelCy + 1} fontSize="10" fontWeight="700" fill={section.color}
-                fontFamily="system-ui, sans-serif" textAnchor="middle" dominantBaseline="middle" letterSpacing="0.05em">
-                {section.label.toUpperCase()}
-              </text>
-
-              {/* Tech items */}
-              {section.items.map((item, col) => {
-                const x = LABEL_X + col * (NODE_W + GAP_X);
-                const rx = isCloud ? NODE_H / 2 : 10;
-
-                return (
-                  <g key={`${section.key}-${col}`} filter="url(#ts-shadow)">
-                    {/* Node body */}
-                    {isCylinder ? (
-                      <>
-                        <ellipse cx={x + NODE_W / 2} cy={y + 8} rx={NODE_W / 2} ry={8} fill={`${section.color}14`} stroke={section.color} strokeWidth="1" strokeOpacity="0.35" />
-                        <rect x={x} y={y + 8} width={NODE_W} height={NODE_H - 16} fill={`url(#tsgrad-${section.key})`} stroke={section.color} strokeWidth="1" strokeOpacity="0.35" />
-                        <path d={`M ${x} ${y + 8} A ${NODE_W / 2} 8 0 0 0 ${x + NODE_W} ${y + 8}`} fill="none" stroke={section.color} strokeWidth="0.5" strokeOpacity="0.2" />
-                        <ellipse cx={x + NODE_W / 2} cy={y + NODE_H - 8} rx={NODE_W / 2} ry={8} fill={`${section.color}0C`} stroke={section.color} strokeWidth="1" strokeOpacity="0.35" />
-                        <path d={`M ${x} ${y + NODE_H - 8} A ${NODE_W / 2} 8 0 0 0 ${x + NODE_W} ${y + NODE_H - 8}`} fill="none" stroke={section.color} strokeWidth="0.5" strokeOpacity="0.2" />
-                      </>
-                    ) : (
-                      <rect x={x} y={y} width={NODE_W} height={NODE_H} rx={rx} fill={`url(#tsgrad-${section.key})`} stroke={section.color} strokeWidth="1.2" strokeOpacity="0.35" />
-                    )}
-
-                    {/* Layer label */}
-                    <text x={x + 12} y={y + 18} fontSize="8.5" fill="#606080" fontFamily="system-ui, sans-serif" fontWeight="500">
-                      {item.layer.length > 24 ? item.layer.slice(0, 22) + "…" : item.layer}
-                    </text>
-
-                    {/* Tech name */}
-                    <text x={x + 12} y={y + 35} fontSize="11.5" fontWeight="700" fill="#e4e4ec" fontFamily="system-ui, sans-serif">
-                      {item.tech.length > 26 ? item.tech.slice(0, 24) + "…" : item.tech}
-                    </text>
-
-                    {/* Reason tooltip-ish sublabel */}
-                    <text x={x + 12} y={y + 52} fontSize="8.5" fill="#505060" fontFamily="system-ui, sans-serif">
-                      {item.reason.length > 32 ? item.reason.slice(0, 30) + "…" : item.reason}
-                    </text>
-                  </g>
-                );
-              })}
-            </g>
-          );
-        })}
-      </svg>
-    </div>
   );
 }

@@ -82,6 +82,7 @@ const SECTION_ICONS: Record<string, string> = {
 export default function LandingPage() {
   return (
     <div className={`min-h-screen ${COLORS.bg} ${COLORS.text}`}>
+      <Nav />
       <Hero />
       <HowItWorks />
       <GeneratorSection />
@@ -90,54 +91,198 @@ export default function LandingPage() {
   );
 }
 
+/* ─── Navigation ─── */
+
+function Nav() {
+  return (
+    <nav className="fixed top-0 inset-x-0 z-50 border-b border-white/[0.04] bg-[#0a0a0f]/70 backdrop-blur-xl">
+      <div className="max-w-6xl mx-auto px-6 h-14 sm:h-16 flex items-center justify-between">
+        <a href="#" className="flex items-center gap-2.5 group">
+          <div
+            className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold text-white transition-shadow duration-300 group-hover:shadow-lg"
+            style={{
+              background: "linear-gradient(135deg, #a855f7, #ec4899)",
+              boxShadow: "0 0 20px rgba(168,85,247,0.3)",
+            }}
+          >
+            FF
+          </div>
+          <span className="text-base font-semibold tracking-tight text-white">FailFast</span>
+        </a>
+        <div className="flex items-center gap-3">
+          <a
+            href="#how-it-works"
+            className="hidden sm:inline-flex text-sm text-[#9090a8] hover:text-white transition-colors"
+          >
+            How It Works
+          </a>
+          <a
+            href="#generate"
+            className="rounded-full text-sm font-medium text-white transition-all duration-300 hover:shadow-lg px-4 py-2 sm:px-5 sm:py-2.5"
+            style={{
+              background: "linear-gradient(135deg, #a855f7, #c084fc)",
+            }}
+          >
+            Get Started
+          </a>
+        </div>
+      </div>
+    </nav>
+  );
+}
+
 /* ─── Hero ─── */
 
 function Hero() {
   return (
-    <header className="relative overflow-hidden border-b border-[#1e1e2e]">
-      <div className="absolute inset-0 bg-gradient-to-br from-[#a855f7]/5 via-transparent to-[#ec4899]/5" />
-      <div className="absolute top-20 right-0 w-96 h-96 bg-[#a855f7]/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-0 left-1/4 w-64 h-64 bg-[#ec4899]/10 rounded-full blur-3xl" />
+    <section className="relative overflow-hidden pt-24 sm:pt-28 lg:pt-36 pb-20 sm:pb-28 lg:pb-36">
+      {/* Background layers */}
+      <div className="absolute inset-0 -z-20">
+        {/* Generated hero background image */}
+        <img
+          src="/hero-bg.png"
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover opacity-100"
+          aria-hidden="true"
+        />
+        {/* Fallback gradient overlay (visible while image loads, and as blend) */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0a0a0f]/0 via-[#0a0a0f]/30 to-[#0a0a0f]/80" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_70%_30%,rgba(168,85,247,0.08),transparent_50%),radial-gradient(ellipse_60%_80%_at_30%_70%,rgba(236,72,153,0.06),transparent_50%)]" />
+      </div>
 
-      <div className="relative max-w-6xl mx-auto px-6 py-20 sm:py-28 lg:py-32">
+      {/* Grid overlay */}
+      <div
+        className="absolute inset-0 -z-10 opacity-[0.03]"
+        style={{
+          backgroundImage: `linear-gradient(rgba(255,255,255,0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.2) 1px, transparent 1px)`,
+          backgroundSize: "64px 64px",
+        }}
+      />
+
+      <div className="relative max-w-6xl mx-auto px-6">
         <div className="max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#10b981]/20 bg-[#10b981]/5 text-sm text-[#10b981] mb-6">
-            <span className="w-2 h-2 rounded-full bg-[#10b981] animate-pulse" />
-            Validate before you build
+          {/* Pipeline badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#a855f7]/20 bg-[#a855f7]/5 text-sm text-[#d8b4fe] mb-8 backdrop-blur-sm">
+            <span className="flex items-center gap-1.5">
+              <span className="w-5 h-5 rounded-md bg-[#a855f7]/20 flex items-center justify-center text-xs">🧬</span>
+              Blueprint
+            </span>
+            <svg className="w-3 h-3 text-[#a855f7]/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+            <span className="flex items-center gap-1.5">
+              <span className="w-5 h-5 rounded-md bg-[#ec4899]/20 flex items-center justify-center text-xs">🤖</span>
+              Build
+            </span>
+            <svg className="w-3 h-3 text-[#ec4899]/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+            <span className="flex items-center gap-1.5">
+              <span className="w-5 h-5 rounded-md bg-[#10b981]/20 flex items-center justify-center text-xs">🎯</span>
+              Test
+            </span>
           </div>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.05] mb-6">
+
+          {/* Headline */}
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[0.95] mb-6">
             <span className="text-white">Fail fast</span>
             <br />
-            <span className="bg-gradient-to-r from-[#a855f7] to-[#ec4899] bg-clip-text text-transparent">
+            <span
+              className="bg-gradient-to-r from-[#a855f7] via-[#ec4899] to-[#c084fc] bg-clip-text text-transparent"
+              style={{
+                backgroundSize: "200% 100%",
+              }}
+            >
               before you build slow.
             </span>
           </h1>
-          <p className="text-lg sm:text-xl text-[#9090a8] leading-relaxed max-w-2xl">
-            Turn your app idea into a practical MVP blueprint, usable by agentic AI to build a lean, 
-            testable version fast. FailFast helps you validate product-market fit before spending weeks 
-            overbuilding something the market may not want.
+
+          {/* Subhead */}
+          <p className="text-lg sm:text-xl text-[#9090a8] leading-relaxed max-w-xl mb-10">
+            Stop building what nobody wants. FailFast generates AI-powered blueprints — tech stack,
+            architecture, and DB schema — in minutes, not weeks.
           </p>
-          <div className="flex items-center gap-4 mt-8">
+
+          {/* CTAs */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-12">
             <a
               href="#generate"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-white font-semibold transition-all duration-200 hover:shadow-lg hover:shadow-[#a855f7]/20"
-              style={{ background: "linear-gradient(135deg, #a855f7, #c084fc)" }}
+              className="group inline-flex items-center gap-2.5 px-7 py-4 rounded-2xl text-white font-semibold text-base transition-all duration-300 hover:shadow-2xl hover:-translate-y-0.5"
+              style={{
+                background: "linear-gradient(135deg, #a855f7, #ec4899)",
+                boxShadow: "0 4px 24px rgba(168,85,247,0.25)",
+              }}
             >
-              Create My MVP Blueprint
+              <span className="text-lg">🧬</span>
+              Generate Blueprint
+              <svg className="w-4 h-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </a>
+            <a
+              href="#how-it-works"
+              className="inline-flex items-center gap-2 px-7 py-4 rounded-2xl border border-white/[0.08] text-[#c4c4d8] font-medium text-sm hover:text-white hover:border-[#a855f7]/30 hover:bg-[#a855f7]/5 transition-all duration-300"
+            >
+              How It Works
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
               </svg>
             </a>
-            <Link
-              href="/portal/login"
-              className="px-6 py-3 rounded-xl border border-[#1e1e2e] text-[#9090a8] hover:text-white hover:border-[#a855f7]/30 transition-all duration-200 font-medium"
-            >
-              Client Portal →
-            </Link>
+          </div>
+
+          {/* Trust strip */}
+          <div className="flex flex-wrap items-center gap-6 sm:gap-8 text-xs text-[#606080]">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-[#a855f7]/10 border border-[#a855f7]/20 flex items-center justify-center">
+                <svg className="w-4 h-4 text-[#a855f7]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-white font-semibold text-sm">48h</p>
+                <p>Average turn</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-[#ec4899]/10 border border-[#ec4899]/20 flex items-center justify-center">
+                <svg className="w-4 h-4 text-[#ec4899]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-white font-semibold text-sm">AI-Powered</p>
+                <p>DeepSeek-driven</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-[#10b981]/10 border border-[#10b981]/20 flex items-center justify-center">
+                <svg className="w-4 h-4 text-[#10b981]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-white font-semibold text-sm">Full Stack</p>
+                <p>Lighthouse-ready</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-[#c084fc]/10 border border-[#c084fc]/20 flex items-center justify-center">
+                <svg className="w-4 h-4 text-[#c084fc]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-white font-semibold text-sm">Free</p>
+                <p>No card required</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </header>
+
+      {/* Bottom fade to next section */}
+      <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-[#0a0a0f] to-transparent -z-10" />
+    </section>
   );
 }
 
@@ -175,7 +320,7 @@ function HowItWorks() {
   ];
 
   return (
-    <section className="relative max-w-6xl mx-auto px-6 py-20 sm:py-28 overflow-hidden">
+    <section id="how-it-works" className="relative max-w-6xl mx-auto px-6 py-20 sm:py-28 overflow-hidden">
       {/* Section background glow */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-[#a855f7]/5 blur-[150px]" />

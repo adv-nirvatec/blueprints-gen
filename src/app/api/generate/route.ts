@@ -149,6 +149,7 @@ export async function POST(req: NextRequest) {
       blueprintId: insertResult.rows[0].id,
       techStack: result.techStack,
       blueprintDocuments: result.blueprintDocuments,
+      featureMap: result.featureMap || [],
       hasFullBlueprint: !!fullBlueprintJson,
       clientCreated: !!clientId && !!tempPassword,
       accountReady: !!clientId,

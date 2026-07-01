@@ -166,24 +166,8 @@ function Hero() {
         <div className="max-w-3xl">
           {/* Pipeline badge */}
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#a855f7]/20 bg-[#a855f7]/5 text-sm text-[#d8b4fe] mb-8 backdrop-blur-sm">
-            <span className="flex items-center gap-1.5">
-              <span className="w-5 h-5 rounded-md bg-[#a855f7]/20 flex items-center justify-center text-xs">🧬</span>
-              Blueprint
-            </span>
-            <svg className="w-3 h-3 text-[#a855f7]/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-            <span className="flex items-center gap-1.5">
-              <span className="w-5 h-5 rounded-md bg-[#ec4899]/20 flex items-center justify-center text-xs">🤖</span>
-              Build
-            </span>
-            <svg className="w-3 h-3 text-[#ec4899]/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-            <span className="flex items-center gap-1.5">
-              <span className="w-5 h-5 rounded-md bg-[#10b981]/20 flex items-center justify-center text-xs">🎯</span>
-              Test
-            </span>
+            <span className="w-2 h-2 rounded-full bg-[#a855f7] animate-pulse" />
+            Validate your ideas first
           </div>
 
           {/* Headline */}

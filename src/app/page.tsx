@@ -42,11 +42,14 @@ const COLORS = {
   border: "border-[#1e1e2e]",
   text: "text-[#e4e4ec]",
   muted: "text-[#9090a8]",
-  accent: "#6C63FF",
-  accentHover: "#7b73ff",
-  accentBg: "bg-[#6C63FF]/10",
-  accentBorder: "border-[#6C63FF]/30",
-  accentText: "text-[#6C63FF]",
+  accent: "#a855f7",
+  accentHover: "#c084fc",
+  accentBg: "bg-[#a855f7]/10",
+  accentBorder: "border-[#a855f7]/30",
+  accentText: "text-[#a855f7]",
+  pink: "#ec4899",
+  pinkBg: "bg-[#ec4899]/10",
+  pinkText: "text-[#ec4899]",
   gold: "#f59e0b",
   goldBg: "bg-[#f59e0b]/10",
   green: "#10b981",
@@ -54,17 +57,13 @@ const COLORS = {
   greenText: "text-[#10b981]",
   red: "#ef4444",
   redBg: "bg-[#ef4444]/10",
-  purple: "#8b5cf6",
-  purpleBg: "bg-[#8b5cf6]/10",
-  cyan: "#06b6d4",
-  cyanBg: "bg-[#06b6d4]/10",
   orange: "#f97316",
   orangeBg: "bg-[#f97316]/10",
 };
 
 const SECTION_COLORS: Record<string, string> = {
-  frontend: COLORS.purple,
-  backend: COLORS.cyan,
+  frontend: COLORS.accent,
+  backend: COLORS.pink,
   database: COLORS.orange,
   infrastructure: COLORS.gold,
   integrations: COLORS.green,
@@ -96,9 +95,9 @@ export default function LandingPage() {
 function Hero() {
   return (
     <header className="relative overflow-hidden border-b border-[#1e1e2e]">
-      <div className="absolute inset-0 bg-gradient-to-br from-[#6C63FF]/5 via-transparent to-[#06b6d4]/5" />
-      <div className="absolute top-20 right-0 w-96 h-96 bg-[#6C63FF]/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-0 left-1/4 w-64 h-64 bg-[#06b6d4]/10 rounded-full blur-3xl" />
+      <div className="absolute inset-0 bg-gradient-to-br from-[#a855f7]/5 via-transparent to-[#ec4899]/5" />
+      <div className="absolute top-20 right-0 w-96 h-96 bg-[#a855f7]/10 rounded-full blur-3xl" />
+      <div className="absolute bottom-0 left-1/4 w-64 h-64 bg-[#ec4899]/10 rounded-full blur-3xl" />
 
       <div className="relative max-w-6xl mx-auto px-6 py-20 sm:py-28 lg:py-32">
         <div className="max-w-3xl">
@@ -109,7 +108,7 @@ function Hero() {
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.05] mb-6">
             <span className="text-white">Fail fast</span>
             <br />
-            <span className="bg-gradient-to-r from-[#6C63FF] to-[#06b6d4] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#a855f7] to-[#ec4899] bg-clip-text text-transparent">
               before you build slow.
             </span>
           </h1>
@@ -121,8 +120,8 @@ function Hero() {
           <div className="flex items-center gap-4 mt-8">
             <a
               href="#generate"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-white font-semibold transition-all duration-200 hover:shadow-lg hover:shadow-[#6C63FF]/20"
-              style={{ background: "linear-gradient(135deg, #6C63FF, #7b73ff)" }}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-white font-semibold transition-all duration-200 hover:shadow-lg hover:shadow-[#a855f7]/20"
+              style={{ background: "linear-gradient(135deg, #a855f7, #c084fc)" }}
             >
               Create My MVP Blueprint
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -131,7 +130,7 @@ function Hero() {
             </a>
             <Link
               href="/portal/login"
-              className="px-6 py-3 rounded-xl border border-[#1e1e2e] text-[#9090a8] hover:text-white hover:border-[#6C63FF]/30 transition-all duration-200 font-medium"
+              className="px-6 py-3 rounded-xl border border-[#1e1e2e] text-[#9090a8] hover:text-white hover:border-[#a855f7]/30 transition-all duration-200 font-medium"
             >
               Client Portal →
             </Link>
@@ -150,7 +149,7 @@ function HowItWorks() {
       num: "01",
       title: "Blueprint the MVP",
       icon: "🧬",
-      color: "#6C63FF",
+      color: "#a855f7",
       desc: "Describe your idea, audience, core features, budget, timeline, and platform. FailFast generates:",
       outputs: ["MVP scope", "Tech stack", "Core modules", "Database plan", "User flows", "Build sequence", "Scale-up notes"],
     },
@@ -321,7 +320,7 @@ function GeneratorSection() {
                 placeholder='e.g. "TaskFlow", "PetCare Pro"'
                 value={form.appName}
                 onChange={(e) => setForm({ ...form, appName: e.target.value })}
-                className={`w-full rounded-xl border ${COLORS.border} ${COLORS.card} px-4 py-3 text-sm text-white placeholder:text-[#606080] focus:outline-none focus:border-[#6C63FF]/50 focus:ring-1 focus:ring-[#6C63FF]/20 transition-all`}
+                className={`w-full rounded-xl border ${COLORS.border} ${COLORS.card} px-4 py-3 text-sm text-white placeholder:text-[#606080] focus:outline-none focus:border-[#a855f7]/50 focus:ring-1 focus:ring-[#a855f7]/20 transition-all`}
               />
             </div>
 
@@ -336,7 +335,7 @@ function GeneratorSection() {
                 placeholder="Describe the problem your app solves, how it works, and what makes it unique..."
                 value={form.appDescription}
                 onChange={(e) => setForm({ ...form, appDescription: e.target.value })}
-                className={`w-full rounded-xl border ${COLORS.border} ${COLORS.card} px-4 py-3 text-sm text-white placeholder:text-[#606080] focus:outline-none focus:border-[#6C63FF]/50 focus:ring-1 focus:ring-[#6C63FF]/20 transition-all resize-none`}
+                className={`w-full rounded-xl border ${COLORS.border} ${COLORS.card} px-4 py-3 text-sm text-white placeholder:text-[#606080] focus:outline-none focus:border-[#a855f7]/50 focus:ring-1 focus:ring-[#a855f7]/20 transition-all resize-none`}
               />
               <p className="text-xs text-[#606080] mt-1">{form.appDescription.length}/2000</p>
             </div>
@@ -350,7 +349,7 @@ function GeneratorSection() {
                   placeholder="e.g. Healthcare, Fintech"
                   value={form.industry}
                   onChange={(e) => setForm({ ...form, industry: e.target.value })}
-                  className={`w-full rounded-xl border ${COLORS.border} ${COLORS.card} px-4 py-3 text-sm text-white placeholder:text-[#606080] focus:outline-none focus:border-[#6C63FF]/50 transition-all`}
+                  className={`w-full rounded-xl border ${COLORS.border} ${COLORS.card} px-4 py-3 text-sm text-white placeholder:text-[#606080] focus:outline-none focus:border-[#a855f7]/50 transition-all`}
                 />
               </div>
               <div>
@@ -361,7 +360,7 @@ function GeneratorSection() {
                   placeholder="e.g. Small business owners"
                   value={form.targetUsers}
                   onChange={(e) => setForm({ ...form, targetUsers: e.target.value })}
-                  className={`w-full rounded-xl border ${COLORS.border} ${COLORS.card} px-4 py-3 text-sm text-white placeholder:text-[#606080] focus:outline-none focus:border-[#6C63FF]/50 transition-all`}
+                  className={`w-full rounded-xl border ${COLORS.border} ${COLORS.card} px-4 py-3 text-sm text-white placeholder:text-[#606080] focus:outline-none focus:border-[#a855f7]/50 transition-all`}
                 />
               </div>
             </div>
@@ -376,7 +375,7 @@ function GeneratorSection() {
                 placeholder={"User registration & login\nDashboard with analytics\nPayment processing\nReal-time notifications"}
                 value={form.features}
                 onChange={(e) => setForm({ ...form, features: e.target.value })}
-                className={`w-full rounded-xl border ${COLORS.border} ${COLORS.card} px-4 py-3 text-sm text-white placeholder:text-[#606080] focus:outline-none focus:border-[#6C63FF]/50 transition-all resize-none`}
+                className={`w-full rounded-xl border ${COLORS.border} ${COLORS.card} px-4 py-3 text-sm text-white placeholder:text-[#606080] focus:outline-none focus:border-[#a855f7]/50 transition-all resize-none`}
               />
             </div>
 
@@ -386,7 +385,7 @@ function GeneratorSection() {
                 <select
                   value={form.budget}
                   onChange={(e) => setForm({ ...form, budget: e.target.value })}
-                  className={`w-full rounded-xl border ${COLORS.border} ${COLORS.card} px-4 py-3 text-sm text-white bg-[#111118] focus:outline-none focus:border-[#6C63FF]/50 transition-all appearance-none`}
+                  className={`w-full rounded-xl border ${COLORS.border} ${COLORS.card} px-4 py-3 text-sm text-white bg-[#111118] focus:outline-none focus:border-[#a855f7]/50 transition-all appearance-none`}
                 >
                   <option value="">Select budget range</option>
                   <option value="Bootstrap (<$5k)">Bootstrap (&lt;$5k)</option>
@@ -400,7 +399,7 @@ function GeneratorSection() {
                 <select
                   value={form.timeline}
                   onChange={(e) => setForm({ ...form, timeline: e.target.value })}
-                  className={`w-full rounded-xl border ${COLORS.border} ${COLORS.card} px-4 py-3 text-sm text-white bg-[#111118] focus:outline-none focus:border-[#6C63FF]/50 transition-all appearance-none`}
+                  className={`w-full rounded-xl border ${COLORS.border} ${COLORS.card} px-4 py-3 text-sm text-white bg-[#111118] focus:outline-none focus:border-[#a855f7]/50 transition-all appearance-none`}
                 >
                   <option value="">Select timeline</option>
                   <option value="ASAP (2-4 weeks)">ASAP (2-4 weeks)</option>
@@ -421,8 +420,8 @@ function GeneratorSection() {
                     onClick={() => setForm({ ...form, platform: p })}
                     className={`flex-1 rounded-xl border px-4 py-3 text-sm font-medium transition-all ${
                       form.platform === p
-                        ? `border-[#6C63FF]/50 bg-[#6C63FF]/10 text-white`
-                        : `${COLORS.border} ${COLORS.card} text-[#9090a8] hover:text-white hover:border-[#6C63FF]/30`
+                        ? `border-[#a855f7]/50 bg-[#a855f7]/10 text-white`
+                        : `${COLORS.border} ${COLORS.card} text-[#9090a8] hover:text-white hover:border-[#a855f7]/30`
                     }`}
                   >
                     {p === "web" ? "🌐 Web" : p === "mobile" ? "📱 Mobile" : "🔄 Both"}
@@ -442,7 +441,7 @@ function GeneratorSection() {
                   placeholder="Your name"
                   value={form.clientName}
                   onChange={(e) => setForm({ ...form, clientName: e.target.value })}
-                  className={`w-full rounded-xl border ${COLORS.border} ${COLORS.card} px-4 py-3 text-sm text-white placeholder:text-[#606080] focus:outline-none focus:border-[#6C63FF]/50 transition-all`}
+                  className={`w-full rounded-xl border ${COLORS.border} ${COLORS.card} px-4 py-3 text-sm text-white placeholder:text-[#606080] focus:outline-none focus:border-[#a855f7]/50 transition-all`}
                 />
                 <input
                   type="email"
@@ -450,7 +449,7 @@ function GeneratorSection() {
                   placeholder="your@email.com"
                   value={form.clientEmail}
                   onChange={(e) => setForm({ ...form, clientEmail: e.target.value })}
-                  className={`w-full rounded-xl border ${COLORS.border} ${COLORS.card} px-4 py-3 text-sm text-white placeholder:text-[#606080] focus:outline-none focus:border-[#6C63FF]/50 transition-all`}
+                  className={`w-full rounded-xl border ${COLORS.border} ${COLORS.card} px-4 py-3 text-sm text-white placeholder:text-[#606080] focus:outline-none focus:border-[#a855f7]/50 transition-all`}
                 />
               </div>
             </div>
@@ -464,11 +463,11 @@ function GeneratorSection() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-4 rounded-xl text-white font-semibold text-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-[#6C63FF]/20"
+              className="w-full py-4 rounded-xl text-white font-semibold text-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-[#a855f7]/20"
               style={{
                 background: loading
                   ? "#1e1e2e"
-                  : "linear-gradient(135deg, #6C63FF, #7b73ff)",
+                  : "linear-gradient(135deg, #a855f7, #c084fc)",
               }}
             >
               {loading ? (
@@ -502,8 +501,8 @@ function GeneratorSection() {
 function EmptyPreview() {
   return (
     <div className={`rounded-2xl border ${COLORS.border} ${COLORS.card} p-8 sm:p-10 h-full flex flex-col items-center justify-center text-center min-h-[500px]`}>
-      <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#6C63FF]/20 to-[#06b6d4]/20 flex items-center justify-center mb-6">
-        <svg className="w-10 h-10 text-[#6C63FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#a855f7]/20 to-[#ec4899]/20 flex items-center justify-center mb-6">
+        <svg className="w-10 h-10 text-[#a855f7]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
         </svg>
       </div>
@@ -546,7 +545,7 @@ function LoadingPreview({ form }: { form: any }) {
         </div>
       </div>
       <p className="text-center text-[#9090a8] text-sm mt-8">
-        Analyzing: <span className="text-[#a5a0ff]">{form.appName || "your app"}</span>
+        Analyzing: <span className="text-[#d8b4fe]">{form.appName || "your app"}</span>
       </p>
     </div>
   );
@@ -573,7 +572,7 @@ function BlueprintResultCard({ result, form, consultSent, sendingConsult, onCons
         {/* Header */}
         <div className="px-6 sm:px-8 py-6 border-b border-[#1e1e2e]">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#6C63FF] to-[#06b6d4] flex items-center justify-center text-lg">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#a855f7] to-[#ec4899] flex items-center justify-center text-lg">
               🧬
             </div>
             <div>
@@ -602,7 +601,7 @@ function BlueprintResultCard({ result, form, consultSent, sendingConsult, onCons
             </div>
             <div>
               <p className="text-xs text-[#606080] mb-0.5">Time to MVP</p>
-              <p className="text-lg font-bold text-[#6C63FF]">{techStack.timeToMvp}</p>
+              <p className="text-lg font-bold text-[#a855f7]">{techStack.timeToMvp}</p>
             </div>
           </div>
         </div>
@@ -637,9 +636,9 @@ function BlueprintResultCard({ result, form, consultSent, sendingConsult, onCons
         </div>
 
         {/* CTA */}
-        <div className={`mt-6 rounded-xl border border-[#6C63FF]/20 bg-gradient-to-br from-[#6C63FF]/10 to-[#06b6d4]/5 p-5 sm:p-6 text-center`}>
+        <div className={`mt-6 rounded-xl border border-[#a855f7]/20 bg-gradient-to-br from-[#a855f7]/10 to-[#ec4899]/5 p-5 sm:p-6 text-center`}>
           <h4 className="text-lg font-bold text-white mb-2">Ready to Build?</h4>
-          <p className="text-sm text-[#a5a0ff] mb-4 max-w-md mx-auto">
+          <p className="text-sm text-[#d8b4fe] mb-4 max-w-md mx-auto">
             Get the full agent-ready blueprint. Our team can use it to build your MVP with AI — 
             or you can take it to your own development workflow.
           </p>
@@ -653,14 +652,14 @@ function BlueprintResultCard({ result, form, consultSent, sendingConsult, onCons
                 onClick={onConsultRequest}
                 disabled={sendingConsult}
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-white font-semibold transition-all duration-200 disabled:opacity-60"
-                style={{ background: "linear-gradient(135deg, #6C63FF, #7b73ff)" }}
+                style={{ background: "linear-gradient(135deg, #a855f7, #c084fc)" }}
               >
                 {sendingConsult ? "Sending..." : "📧 Request a Consult"}
               </button>
             )}
             <span className="text-sm text-[#9090a8]">
               or{" "}
-              <Link href="/portal/login" className="text-[#6C63FF] hover:text-[#a5a0ff] underline underline-offset-2">
+              <Link href="/portal/login" className="text-[#a855f7] hover:text-[#d8b4fe] underline underline-offset-2">
                 Sign in to Client Portal
               </Link>
             </span>
@@ -681,13 +680,13 @@ function Footer() {
     <footer className="border-t border-[#1e1e2e] py-10">
       <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-2 text-sm text-[#9090a8]">
-          <span className="text-[#6C63FF] font-bold">FailFast</span>
+          <span className="text-[#a855f7] font-bold">FailFast</span>
         </div>
         <div className="flex items-center gap-6 text-sm text-[#606080]">
-          <Link href="/portal/login" className="hover:text-[#a5a0ff] transition-colors">
+          <Link href="/portal/login" className="hover:text-[#d8b4fe] transition-colors">
             Client Portal
           </Link>
-          <a href="mailto:admin@failfast.online" className="hover:text-[#a5a0ff] transition-colors">
+          <a href="mailto:admin@failfast.online" className="hover:text-[#d8b4fe] transition-colors">
             Contact
           </a>
         </div>

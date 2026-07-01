@@ -91,23 +91,23 @@ export async function POST(req: NextRequest) {
       <div style="font-family: -apple-system, BlinkMacSystemFont, sans-serif; max-width: 520px; margin: 0 auto; padding: 32px 16px; background: #0a0a0f; color: #e4e4ec;">
         <div style="text-align: center; margin-bottom: 28px;">
           <span style="font-size: 32px;">🧬</span>
-          <h1 style="font-size: 22px; font-weight: 700; color: #6C63FF; margin: 8px 0 0;">FailFast Blueprints</h1>
+          <h1 style="font-size: 22px; font-weight: 700; color: #a855f7; margin: 8px 0 0;">FailFast Blueprints</h1>
         </div>
         
         <div style="background: #111118; border: 1px solid #1e1e2e; border-radius: 16px; padding: 28px;">
           <h2 style="font-size: 18px; color: #fff; margin: 0 0 8px;">Your Blueprint is Ready!</h2>
           <p style="color: #9090a8; font-size: 14px; line-height: 1.6; margin: 0 0 20px;">
-            We've completed the full blueprint for <strong style="color: #a5a0ff;">${bp.app_name}</strong>. 
+            We've completed the full blueprint for <strong style="color: #d8b4fe;">${bp.app_name}</strong>. 
             Your complete architecture docs, database schema, API design, build phases, and more are ready to view.
           </p>
 
           <div style="background: #0a0a0f; border: 1px solid #1e1e2e; border-radius: 12px; padding: 16px; margin-bottom: 20px;">
             <p style="font-size: 12px; color: #606080; margin: 0 0 8px;">Your login credentials:</p>
-            <p style="font-size: 14px; margin: 4px 0;"><strong style="color: #e4e4ec;">Email:</strong> <span style="color: #a5a0ff;">${clientEmail}</span></p>
+            <p style="font-size: 14px; margin: 4px 0;"><strong style="color: #e4e4ec;">Email:</strong> <span style="color: #d8b4fe;">${clientEmail}</span></p>
             <p style="font-size: 14px; margin: 4px 0;"><strong style="color: #e4e4ec;">Password:</strong> <code style="background: #1e1e2e; color: #10b981; padding: 2px 8px; border-radius: 4px; font-size: 13px;">${tempPassword}</code></p>
           </div>
 
-          <a href="${loginUrl}" style="display: block; text-align: center; background: linear-gradient(135deg, #6C63FF, #7b73ff); color: #fff; text-decoration: none; padding: 14px 24px; border-radius: 12px; font-weight: 600; font-size: 15px;">
+          <a href="${loginUrl}" style="display: block; text-align: center; background: linear-gradient(135deg, #a855f7, #c084fc); color: #fff; text-decoration: none; padding: 14px 24px; border-radius: 12px; font-weight: 600; font-size: 15px;">
             View Your Blueprint →
           </a>
 

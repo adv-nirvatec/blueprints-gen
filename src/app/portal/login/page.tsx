@@ -42,7 +42,7 @@ export default function LoginPage() {
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-2 text-[#6C63FF] font-bold text-xl">
+          <Link href="/" className="inline-flex items-center gap-2 text-[#a855f7] font-bold text-xl">
             <span className="text-2xl">🧬</span>
             Blueprint Portal
           </Link>
@@ -59,7 +59,7 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@company.com"
-              className="w-full rounded-xl border border-[#1e1e2e] bg-[#0a0a0f] px-4 py-3 text-sm text-white placeholder:text-[#606080] focus:outline-none focus:border-[#6C63FF]/50 transition-all"
+              className="w-full rounded-xl border border-[#1e1e2e] bg-[#0a0a0f] px-4 py-3 text-sm text-white placeholder:text-[#606080] focus:outline-none focus:border-[#a855f7]/50 transition-all"
             />
           </div>
           <div>
@@ -70,7 +70,7 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full rounded-xl border border-[#1e1e2e] bg-[#0a0a0f] px-4 py-3 text-sm text-white placeholder:text-[#606080] focus:outline-none focus:border-[#6C63FF]/50 transition-all"
+              className="w-full rounded-xl border border-[#1e1e2e] bg-[#0a0a0f] px-4 py-3 text-sm text-white placeholder:text-[#606080] focus:outline-none focus:border-[#a855f7]/50 transition-all"
             />
           </div>
 
@@ -84,7 +84,7 @@ export default function LoginPage() {
             type="submit"
             disabled={loading}
             className="w-full py-3 rounded-xl text-white font-semibold transition-all duration-200 disabled:opacity-50"
-            style={{ background: "linear-gradient(135deg, #6C63FF, #7b73ff)" }}
+            style={{ background: "linear-gradient(135deg, #a855f7, #c084fc)" }}
           >
             {loading ? "Signing in..." : "Sign In"}
           </button>
@@ -98,7 +98,7 @@ export default function LoginPage() {
         </form>
 
         <div className="text-center mt-6">
-          <Link href="/" className="text-sm text-[#606080] hover:text-[#a5a0ff] transition-colors">
+          <Link href="/" className="text-sm text-[#606080] hover:text-[#d8b4fe] transition-colors">
             ← Back to Blueprint Generator
           </Link>
         </div>

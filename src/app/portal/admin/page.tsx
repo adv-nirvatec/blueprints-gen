@@ -130,7 +130,7 @@ export default function AdminDashboard() {
   if (loading) {
     return (
       <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center">
-        <div className="animate-spin h-8 w-8 border-2 border-[#6C63FF] border-t-transparent rounded-full" />
+        <div className="animate-spin h-8 w-8 border-2 border-[#a855f7] border-t-transparent rounded-full" />
       </div>
     );
   }
@@ -156,10 +156,10 @@ export default function AdminDashboard() {
 
       <div className="max-w-6xl mx-auto px-6 py-8">
         <div className="flex gap-1 mb-8 rounded-xl bg-[#111118] border border-[#1e1e2e] p-1 w-fit">
-          <button onClick={() => setTab("blueprints")} className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${tab === "blueprints" ? "bg-[#6C63FF] text-white" : "text-[#9090a8] hover:text-white"}`}>
+          <button onClick={() => setTab("blueprints")} className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${tab === "blueprints" ? "bg-[#a855f7] text-white" : "text-[#9090a8] hover:text-white"}`}>
             📋 Blueprints ({blueprints.length})
           </button>
-          <button onClick={() => setTab("clients")} className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${tab === "clients" ? "bg-[#6C63FF] text-white" : "text-[#9090a8] hover:text-white"}`}>
+          <button onClick={() => setTab("clients")} className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${tab === "clients" ? "bg-[#a855f7] text-white" : "text-[#9090a8] hover:text-white"}`}>
             👥 Clients ({clients.length})
           </button>
         </div>
@@ -228,7 +228,7 @@ export default function AdminDashboard() {
                               )
                             )}
                             <button onClick={() => setAssigning(bp.id)}
-                              className="px-3 py-1.5 rounded-lg border border-[#6C63FF]/30 text-[#a5a0ff] text-xs font-medium hover:bg-[#6C63FF]/10 transition-all">
+                              className="px-3 py-1.5 rounded-lg border border-[#a855f7]/30 text-[#d8b4fe] text-xs font-medium hover:bg-[#a855f7]/10 transition-all">
                               {bp.assigned_to ? "Reassign" : "Assign to Client"}
                             </button>
                           </div>
@@ -280,30 +280,30 @@ export default function AdminDashboard() {
                   <div>
                     <label className="block text-xs text-[#9090a8] mb-1">Email *</label>
                     <input type="email" required value={newClient.email} onChange={(e) => setNewClient({ ...newClient, email: e.target.value })}
-                      className="w-full rounded-lg border border-[#1e1e2e] bg-[#0a0a0f] px-3 py-2 text-sm text-white placeholder:text-[#606080] focus:outline-none focus:border-[#6C63FF]/50"
+                      className="w-full rounded-lg border border-[#1e1e2e] bg-[#0a0a0f] px-3 py-2 text-sm text-white placeholder:text-[#606080] focus:outline-none focus:border-[#a855f7]/50"
                       placeholder="client@company.com" />
                   </div>
                   <div>
                     <label className="block text-xs text-[#9090a8] mb-1">Password *</label>
                     <input type="password" required value={newClient.password} onChange={(e) => setNewClient({ ...newClient, password: e.target.value })}
-                      className="w-full rounded-lg border border-[#1e1e2e] bg-[#0a0a0f] px-3 py-2 text-sm text-white placeholder:text-[#606080] focus:outline-none focus:border-[#6C63FF]/50"
+                      className="w-full rounded-lg border border-[#1e1e2e] bg-[#0a0a0f] px-3 py-2 text-sm text-white placeholder:text-[#606080] focus:outline-none focus:border-[#a855f7]/50"
                       placeholder="••••••••" />
                   </div>
                   <div>
                     <label className="block text-xs text-[#9090a8] mb-1">Display Name</label>
                     <input type="text" value={newClient.displayName} onChange={(e) => setNewClient({ ...newClient, displayName: e.target.value })}
-                      className="w-full rounded-lg border border-[#1e1e2e] bg-[#0a0a0f] px-3 py-2 text-sm text-white placeholder:text-[#606080] focus:outline-none focus:border-[#6C63FF]/50"
+                      className="w-full rounded-lg border border-[#1e1e2e] bg-[#0a0a0f] px-3 py-2 text-sm text-white placeholder:text-[#606080] focus:outline-none focus:border-[#a855f7]/50"
                       placeholder="John Doe" />
                   </div>
                   <div>
                     <label className="block text-xs text-[#9090a8] mb-1">Company</label>
                     <input type="text" value={newClient.company} onChange={(e) => setNewClient({ ...newClient, company: e.target.value })}
-                      className="w-full rounded-lg border border-[#1e1e2e] bg-[#0a0a0f] px-3 py-2 text-sm text-white placeholder:text-[#606080] focus:outline-none focus:border-[#6C63FF]/50"
+                      className="w-full rounded-lg border border-[#1e1e2e] bg-[#0a0a0f] px-3 py-2 text-sm text-white placeholder:text-[#606080] focus:outline-none focus:border-[#a855f7]/50"
                       placeholder="Acme Corp" />
                   </div>
                 </div>
                 {createMsg && <p className={`text-sm ${createMsg.includes("success") ? "text-[#10b981]" : "text-[#ef4444]"}`}>{createMsg}</p>}
-                <button type="submit" disabled={creating} className="px-5 py-2 rounded-lg text-white text-sm font-medium transition-all" style={{ background: "linear-gradient(135deg, #6C63FF, #7b73ff)" }}>
+                <button type="submit" disabled={creating} className="px-5 py-2 rounded-lg text-white text-sm font-medium transition-all" style={{ background: "linear-gradient(135deg, #a855f7, #c084fc)" }}>
                   {creating ? "Creating..." : "Create Client"}
                 </button>
               </form>
@@ -321,7 +321,7 @@ export default function AdminDashboard() {
                         <p className="text-sm text-white font-medium">
                           {c.display_name || c.email}
                           {c.email === "admin@failfast.online" && (
-                            <span className="ml-2 text-[10px] bg-[#6C63FF]/20 text-[#a5a0ff] px-1.5 py-0.5 rounded">Admin</span>
+                            <span className="ml-2 text-[10px] bg-[#a855f7]/20 text-[#d8b4fe] px-1.5 py-0.5 rounded">Admin</span>
                           )}
                         </p>
                         <p className="text-xs text-[#606080]">{c.email} {c.company ? `· ${c.company}` : ""}</p>
@@ -344,7 +344,7 @@ export default function AdminDashboard() {
 function StatusBadge({ bp }: { bp: Blueprint }) {
   if (bp.has_full_blueprint || bp.status === "full") {
     return (
-      <span className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium bg-[#6C63FF]/10 text-[#a5a0ff] border border-[#6C63FF]/20">
+      <span className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium bg-[#a855f7]/10 text-[#d8b4fe] border border-[#a855f7]/20">
         Complete
       </span>
     );

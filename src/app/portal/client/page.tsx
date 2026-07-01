@@ -50,7 +50,7 @@ export default function ClientDashboard() {
   if (loading) {
     return (
       <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center">
-        <div className="animate-spin h-8 w-8 border-2 border-[#6C63FF] border-t-transparent rounded-full" />
+        <div className="animate-spin h-8 w-8 border-2 border-[#a855f7] border-t-transparent rounded-full" />
       </div>
     );
   }
@@ -100,7 +100,7 @@ export default function ClientDashboard() {
             <a
               href="/"
               className="inline-flex items-center gap-2 mt-6 px-5 py-2.5 rounded-xl text-white text-sm font-medium"
-              style={{ background: "linear-gradient(135deg, #6C63FF, #7b73ff)" }}
+              style={{ background: "linear-gradient(135deg, #a855f7, #c084fc)" }}
             >
               Generate a Blueprint
             </a>
@@ -154,7 +154,7 @@ export default function ClientDashboard() {
 
                       {/* Build CTA */}
                       {fullBp && (
-                        <div className="rounded-xl border border-[#10b981]/20 bg-gradient-to-br from-[#10b981]/5 to-[#6C63FF]/5 p-5 text-center">
+                        <div className="rounded-xl border border-[#10b981]/20 bg-gradient-to-br from-[#10b981]/5 to-[#a855f7]/5 p-5 text-center">
                           <h4 className="text-base font-bold text-white mb-2">🚀 Ready to Build?</h4>
                           <p className="text-sm text-[#9090a8] mb-4 max-w-md mx-auto">
                             Our AI agent Katsu can take this blueprint and build the MVP.
@@ -184,7 +184,7 @@ export default function ClientDashboard() {
 function StatusBadge({ status, fullBlueprint }: { status: string; fullBlueprint: boolean }) {
   if (status === "full" || fullBlueprint) {
     return (
-      <span className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium bg-[#6C63FF]/10 text-[#a5a0ff] border border-[#6C63FF]/20">
+      <span className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium bg-[#a855f7]/10 text-[#d8b4fe] border border-[#a855f7]/20">
         Complete
       </span>
     );

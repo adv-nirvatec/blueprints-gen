@@ -3,8 +3,8 @@
 import { useState } from "react";
 
 const SECTION_META: Record<string, { color: string; icon: string }> = {
-  frontend: { color: "#8b5cf6", icon: "🎨" },
-  backend: { color: "#06b6d4", icon: "⚙️" },
+  frontend: { color: "#a855f7", icon: "🎨" },
+  backend: { color: "#ec4899", icon: "⚙️" },
   database: { color: "#f97316", icon: "🗄️" },
   infrastructure: { color: "#f59e0b", icon: "☁️" },
   integrations: { color: "#10b981", icon: "🔌" },
@@ -51,7 +51,7 @@ export function TechStackView({ techStack }: { techStack: any }) {
         </div>
         <div className="text-center">
           <p className="text-xs text-[#606080]">Time to MVP</p>
-          <p className="text-lg font-bold text-[#6C63FF]">{ts.timeToMvp || "N/A"}</p>
+          <p className="text-lg font-bold text-[#a855f7]">{ts.timeToMvp || "N/A"}</p>
         </div>
       </div>
     </div>
@@ -126,7 +126,7 @@ export function FullBlueprintTabs({ blueprint }: { blueprint: any }) {
   const active = tabs.find((t) => t.key === tab) || tabs[0];
 
   return (
-    <div className="rounded-xl border border-[#6C63FF]/20 overflow-hidden">
+    <div className="rounded-xl border border-[#a855f7]/20 overflow-hidden">
       <div className="flex overflow-x-auto border-b border-[#1e1e2e] bg-[#0a0a0f]/50">
         {tabs.map((t) => (
           <button
@@ -134,7 +134,7 @@ export function FullBlueprintTabs({ blueprint }: { blueprint: any }) {
             onClick={() => setTab(t.key)}
             className={`shrink-0 px-3 sm:px-4 py-2.5 text-xs font-medium transition-all whitespace-nowrap ${
               tab === t.key
-                ? "text-[#a5a0ff] border-b-2 border-[#6C63FF] bg-[#6C63FF]/5"
+                ? "text-[#d8b4fe] border-b-2 border-[#a855f7] bg-[#a855f7]/5"
                 : "text-[#606080] hover:text-[#9090a8]"
             }`}
           >
@@ -218,11 +218,11 @@ interface ArchEdge {
 }
 
 const NODE_STYLES: Record<string, { color: string; icon: string; shape: string }> = {
-  entry:    { color: "#6C63FF", icon: "🌐", shape: "rounded" },
+  entry:    { color: "#a855f7", icon: "🌐", shape: "rounded" },
   proxy:    { color: "#10b981", icon: "🔀", shape: "hexagon" },
-  app:      { color: "#8b5cf6", icon: "🖥️", shape: "rounded" },
+  app:      { color: "#a855f7", icon: "🖥️", shape: "rounded" },
   database: { color: "#f97316", icon: "🗄️", shape: "cylinder" },
-  service:  { color: "#06b6d4", icon: "⚙️", shape: "pill" },
+  service:  { color: "#ec4899", icon: "⚙️", shape: "pill" },
   external: { color: "#ec4899", icon: "☁️", shape: "cloud" },
   infra:    { color: "#6366f1", icon: "🐳", shape: "dashed" },
   auth:     { color: "#f59e0b", icon: "🔐", shape: "rounded" },
@@ -615,7 +615,7 @@ function ApiTab({ content }: { content: any }) {
               <td className="py-2 px-3">
                 <span className={`rounded px-1.5 py-0.5 text-[10px] font-mono font-bold ${
                   ep.method === "GET" ? "bg-[#10b981]/10 text-[#10b981]" :
-                  ep.method === "POST" ? "bg-[#6C63FF]/10 text-[#a5a0ff]" :
+                  ep.method === "POST" ? "bg-[#a855f7]/10 text-[#d8b4fe]" :
                   ep.method === "PUT" || ep.method === "PATCH" ? "bg-[#f59e0b]/10 text-[#f59e0b]" :
                   "bg-[#ef4444]/10 text-[#ef4444]"
                 }`}>
@@ -642,7 +642,7 @@ function PhasesTab({ content }: { content: any }) {
       {phases.map((phase: any, i: number) => (
         <div key={i} className="rounded-lg border border-[#1e1e2e] bg-[#0a0a0f]/60 p-4">
           <div className="flex items-center gap-3 mb-2">
-            <span className="w-7 h-7 rounded-lg bg-[#6C63FF] flex items-center justify-center text-xs font-bold text-white">
+            <span className="w-7 h-7 rounded-lg bg-[#a855f7] flex items-center justify-center text-xs font-bold text-white">
               {phase.phase || i + 1}
             </span>
             <div>
@@ -728,7 +728,7 @@ function SecurityTab({ content }: { content: any }) {
   return (
     <div className="space-y-4">
       <div>
-        <h5 className="text-xs font-semibold text-[#6C63FF] mb-2">🛡️ Security Measures</h5>
+        <h5 className="text-xs font-semibold text-[#a855f7] mb-2">🛡️ Security Measures</h5>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {(content.measures || []).map((m: string, i: number) => (
             <div key={i} className="rounded-lg bg-[#0a0a0f]/60 px-3 py-2 text-xs text-[#9090a8] flex items-start gap-2">
@@ -739,10 +739,10 @@ function SecurityTab({ content }: { content: any }) {
       </div>
       {content.complianceFrameworks?.length > 0 && (
         <div>
-          <h5 className="text-xs font-semibold text-[#6C63FF] mb-2">📋 Compliance</h5>
+          <h5 className="text-xs font-semibold text-[#a855f7] mb-2">📋 Compliance</h5>
           <div className="flex flex-wrap gap-2">
             {content.complianceFrameworks.map((f: string, i: number) => (
-              <span key={i} className="rounded-full bg-[#6C63FF]/10 border border-[#6C63FF]/20 px-3 py-1 text-[11px] text-[#a5a0ff]">
+              <span key={i} className="rounded-full bg-[#a855f7]/10 border border-[#a855f7]/20 px-3 py-1 text-[11px] text-[#d8b4fe]">
                 {f}
               </span>
             ))}
@@ -759,12 +759,12 @@ function GtmTab({ content }: { content: any }) {
   return (
     <div className="space-y-4">
       <div className="rounded-lg bg-[#0a0a0f]/60 p-4">
-        <h5 className="text-xs font-semibold text-[#6C63FF] mb-2">Strategy</h5>
+        <h5 className="text-xs font-semibold text-[#a855f7] mb-2">Strategy</h5>
         <p className="text-sm text-[#c4c4d8] leading-relaxed">{content.launchStrategy}</p>
       </div>
       {content.targetChannels?.length > 0 && (
         <div>
-          <h5 className="text-xs font-semibold text-[#6C63FF] mb-2">Target Channels</h5>
+          <h5 className="text-xs font-semibold text-[#a855f7] mb-2">Target Channels</h5>
           <div className="flex flex-wrap gap-2">
             {content.targetChannels.map((ch: string, i: number) => (
               <span key={i} className="rounded-lg bg-[#0a0a0f]/60 border border-[#1e1e2e] px-3 py-1.5 text-xs text-[#9090a8]">
@@ -776,7 +776,7 @@ function GtmTab({ content }: { content: any }) {
       )}
       {content.monetization && (
         <div className="rounded-lg bg-[#0a0a0f]/60 p-4">
-          <h5 className="text-xs font-semibold text-[#6C63FF] mb-2">Monetization</h5>
+          <h5 className="text-xs font-semibold text-[#a855f7] mb-2">Monetization</h5>
           <p className="text-sm text-[#c4c4d8]">{content.monetization}</p>
         </div>
       )}

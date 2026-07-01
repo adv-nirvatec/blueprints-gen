@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
       <div style="font-family: -apple-system, BlinkMacSystemFont, sans-serif; max-width: 520px; margin: 0 auto; padding: 24px 16px; background: #0a0a0f; color: #e4e4ec;">
         <div style="text-align: center; margin-bottom: 20px;">
           <span style="font-size: 28px;">🧬</span>
-          <h2 style="font-size: 18px; color: #6C63FF; margin: 6px 0 0;">New Blueprint Consult Request</h2>
+          <h2 style="font-size: 18px; color: #a855f7; margin: 6px 0 0;">New Blueprint Consult Request</h2>
         </div>
         
         <div style="background: #111118; border: 1px solid #1e1e2e; border-radius: 12px; padding: 20px;">
@@ -38,11 +38,11 @@ export async function POST(req: NextRequest) {
           </div>
 
           <div style="background: #0a0a0f; border-radius: 8px; padding: 12px; margin-bottom: 16px;">
-            ${clientName ? `<p style="font-size: 13px; margin: 0 0 4px;"><strong style="color: #e4e4ec;">Client:</strong> <span style="color: #a5a0ff;">${clientName}</span></p>` : ""}
-            ${clientEmail ? `<p style="font-size: 13px; margin: 0;"><strong style="color: #e4e4ec;">Email:</strong> <span style="color: #a5a0ff;">${clientEmail}</span></p>` : "<p style=\"font-size: 13px; color: #ef4444; margin: 0;\">No contact info provided</p>"}
+            ${clientName ? `<p style="font-size: 13px; margin: 0 0 4px;"><strong style="color: #e4e4ec;">Client:</strong> <span style="color: #d8b4fe;">${clientName}</span></p>` : ""}
+            ${clientEmail ? `<p style="font-size: 13px; margin: 0;"><strong style="color: #e4e4ec;">Email:</strong> <span style="color: #d8b4fe;">${clientEmail}</span></p>` : "<p style=\"font-size: 13px; color: #ef4444; margin: 0;\">No contact info provided</p>"}
           </div>
 
-          <a href="https://failfast.online/portal/admin" style="display: block; text-align: center; background: linear-gradient(135deg, #6C63FF, #7b73ff); color: #fff; text-decoration: none; padding: 12px 20px; border-radius: 10px; font-weight: 600; font-size: 14px;">
+          <a href="https://failfast.online/portal/admin" style="display: block; text-align: center; background: linear-gradient(135deg, #a855f7, #c084fc); color: #fff; text-decoration: none; padding: 12px 20px; border-radius: 10px; font-weight: 600; font-size: 14px;">
             View in Admin Dashboard →
           </a>
         </div>

@@ -886,48 +886,91 @@ function FeatureTechMap({ featureMap }: { featureMap: FeatureMapEntry[] }) {
   });
 
   return (
-    <div className="px-4 sm:px-6 py-5">
-      <p className="text-[10px] font-medium uppercase tracking-wider text-[#606080] mb-4 text-center">
-        How Your Features Connect to the Stack
-      </p>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-5">
+    <div className="px-4 sm:px-6 py-6">
+      <div className="flex items-center gap-2 mb-5">
+        <span className="w-6 h-6 rounded-md bg-[#a855f7]/10 border border-[#a855f7]/20 flex items-center justify-center text-xs">🔗</span>
+        <h4 className="text-sm font-semibold text-white">How Your Features Map to the Stack</h4>
+      </div>
+
+      {/* Feature rows — each feature gets a full card with embedded tech tags */}
+      <div className="space-y-4 mb-6">
         {featureMap.map((entry, i) => {
           const accent = FEATURE_ACCENTS[i % FEATURE_ACCENTS.length];
           return (
-            <div key={i} className="rounded-xl border px-4 py-3 text-sm transition-all duration-300 hover:-translate-y-0.5"
-              style={{ background: accent.bg, borderColor: `${accent.color}25` }}>
-              <div className="flex items-center gap-2 mb-1.5">
-                <span className="text-base">{entry.icon}</span>
-                <span className="text-xs font-semibold text-white">{entry.feature}</span>
+            <div
+              key={i}
+              className="relative rounded-2xl border overflow-hidden transition-all duration-300 hover:-translate-y-0.5 group"
+              style={{ borderColor: `${accent.color}15`, background: `linear-gradient(135deg, ${accent.color}06, rgba(17,17,24,0.4))` }}
+            >
+              {/* Accent line on left */}
+              <div className="absolute left-0 top-0 bottom-0 w-0.5 rounded-l-2xl" style={{ background: accent.color }} />
+
+              <div className="p-4 sm:p-5">
+                {/* Feature header */}
+                <div className="flex items-start gap-3 mb-3">
+                  <div
+                    className="w-9 h-9 rounded-xl flex items-center justify-center text-base shrink-0"
+                    style={{ background: `${accent.color}18`, border: `1px solid ${accent.color}25` }}
+                  >
+                    {entry.icon}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h5 className="text-sm font-bold text-white mb-0.5">{entry.feature}</h5>
+                    <p className="text-xs text-[#9090a8] leading-relaxed">{entry.flow}</p>
+                  </div>
+                </div>
+
+                {/* Tech chips for this feature */}
+                <div className="flex flex-wrap gap-1.5 ml-12">
+                  {entry.techNodes.map((tech) => (
+                    <span
+                      key={tech}
+                      className="inline-flex items-center rounded-lg px-2.5 py-1 text-[11px] font-medium transition-all duration-200"
+                      style={{
+                        background: `${accent.color}12`,
+                        border: `1px solid ${accent.color}25`,
+                        color: accent.color,
+                      }}
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
               </div>
-              <p className="text-[11px] text-[#9090a8] leading-relaxed">{entry.flow}</p>
             </div>
           );
         })}
       </div>
-      <div className="rounded-xl border border-[#1e1e2e]/60 bg-[#0a0a0f]/40 p-4">
-        <p className="text-[10px] font-medium uppercase tracking-wider text-[#606080] mb-3 text-center">
-          Technologies Powering This App
+
+      {/* Tech summary — all unique technologies at a glance */}
+      <div className="rounded-2xl border border-[#1e1e2e]/40 bg-[#0a0a0f]/30 p-5">
+        <p className="text-[10px] font-medium uppercase tracking-wider text-[#606080] mb-3">
+          All Technologies — {allTech.length} total
         </p>
-        <div className="flex flex-wrap gap-2 justify-center">
+        <div className="flex flex-wrap gap-2">
           {allTech.map((tech) => {
-            const featureIndices = techToFeatures[tech] || [];
-            const primaryAccent = featureIndices.length > 0
-              ? FEATURE_ACCENTS[featureIndices[0] % FEATURE_ACCENTS.length] : FEATURE_ACCENTS[0];
+            const featureCount = (techToFeatures[tech] || []).length;
+            const primaryAccent = FEATURE_ACCENTS[
+              ((techToFeatures[tech] || [])[0] || 0) % FEATURE_ACCENTS.length
+            ];
             return (
-              <div key={tech} className="relative group"
-                title={`Used by: ${featureIndices.map((i) => featureMap[i].feature).join(", ")}`}>
-                <div className="rounded-lg px-3 py-1.5 text-xs font-medium transition-all duration-300 hover:shadow-md cursor-default"
-                  style={{ background: `${primaryAccent.color}15`, border: `1px solid ${primaryAccent.color}30`, color: primaryAccent.color }}>
-                  {tech}
-                </div>
-                {featureIndices.length > 1 && (
-                  <div className="absolute -top-1 -right-1 flex gap-0.5">
-                    {featureIndices.slice(0, 3).map((fi) => {
-                      const dotAccent = FEATURE_ACCENTS[fi % FEATURE_ACCENTS.length];
-                      return <span key={fi} className="w-1.5 h-1.5 rounded-full" style={{ background: dotAccent.color }} />;
-                    })}
-                  </div>
+              <div
+                key={tech}
+                className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all duration-200 hover:scale-105 cursor-default"
+                style={{
+                  background: `${primaryAccent.color}10`,
+                  border: `1px solid ${primaryAccent.color}20`,
+                  color: primaryAccent.color,
+                }}
+              >
+                {tech}
+                {featureCount > 1 && (
+                  <span
+                    className="inline-flex items-center justify-center w-4 h-4 rounded-full text-[9px] font-bold"
+                    style={{ background: primaryAccent.color, color: "#0a0a0f" }}
+                  >
+                    {featureCount}
+                  </span>
                 )}
               </div>
             );

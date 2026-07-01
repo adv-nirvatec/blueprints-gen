@@ -166,14 +166,30 @@ export default function EnhancePage() {
                 />
               </div>
 
-              <div className="text-center pt-4">
-                <Link
-                  href="/"
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-white font-semibold transition-all duration-200 hover:shadow-lg hover:shadow-[#a855f7]/20"
-                  style={{ background: "linear-gradient(135deg, #a855f7, #c084fc)" }}
+              {/* Consult CTA */}
+              <div className="rounded-2xl border border-[#ec4899]/20 bg-gradient-to-br from-[#ec4899]/5 to-[#a855f7]/5 p-7 sm:p-8 text-center mt-6">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#ec4899]/20 to-[#a855f7]/20 flex items-center justify-center text-2xl mb-4 mx-auto">
+                  📞
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">Like what you see?</h3>
+                <p className="text-sm text-[#9090a8] max-w-md mx-auto mb-5">
+                  Let our team build this for real. Get a custom website that actually converts — we handle design, development, and deployment.
+                </p>
+                <a
+                  href="https://calendly.com/adv-nirvatec/failfast"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-7 py-4 rounded-2xl text-white font-semibold text-base transition-all duration-300 hover:shadow-xl hover:shadow-[#ec4899]/20 hover:-translate-y-0.5"
+                  style={{ background: "linear-gradient(135deg, #ec4899, #a855f7)" }}
                 >
-                  🧬 Try Blueprint Generator
-                </Link>
+                  Book a Consult
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </a>
+                <p className="text-xs text-[#606080] mt-4">
+                  Or skip the queue — <Link href="/" className="text-[#d8b4fe] hover:text-[#a855f7] underline underline-offset-2 transition-colors">generate a blueprint</Link> first
+                </p>
               </div>
             </div>
           )}

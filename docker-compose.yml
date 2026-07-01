@@ -1,6 +1,24 @@
 services:
-  blueprints-app:
-    container_name: blueprints-app
+  failfast-db:
+    container_name: failfast-db
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: failfast
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: failfast
+    volumes:
+      - failfast_pgdata:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:5434:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U failfast"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  failfast-app:
+    container_name: failfast-prod
     build: .
     restart: unless-stopped
     ports:
@@ -10,14 +28,14 @@ services:
       - NODE_ENV=production
       - PORT=3000
       - HOSTNAME=0.0.0.0
-    networks:
-      - spawnpoint_spawnpoint
+    depends_on:
+      failfast-db:
+        condition: service_healthy
     logging:
       driver: json-file
       options:
         max-size: "10m"
         max-file: "3"
 
-networks:
-  spawnpoint_spawnpoint:
-    external: true
+volumes:
+  failfast_pgdata:

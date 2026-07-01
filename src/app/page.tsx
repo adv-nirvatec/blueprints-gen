@@ -150,6 +150,7 @@ function HowItWorks() {
       title: "Blueprint the MVP",
       icon: "🧬",
       color: "#a855f7",
+      glow: "rgba(168,85,247,0.15)",
       desc: "Describe your idea, audience, core features, budget, timeline, and platform. FailFast generates:",
       outputs: ["MVP scope", "Tech stack", "Core modules", "Database plan", "User flows", "Build sequence", "Scale-up notes"],
     },
@@ -157,7 +158,8 @@ function HowItWorks() {
       num: "02",
       title: "Build with Agentic AI",
       icon: "🤖",
-      color: "#f59e0b",
+      color: "#ec4899",
+      glow: "rgba(236,72,153,0.15)",
       desc: "Your blueprint becomes an agent-ready implementation brief. AI can generate the core pieces — or our team builds it for you.",
       outputs: ["Frontend", "Backend", "Database schema", "Auth flow", "Admin panel", "Deployment path", "Product screens"],
     },
@@ -166,41 +168,129 @@ function HowItWorks() {
       title: "Test Product-Market Fit",
       icon: "🎯",
       color: "#10b981",
+      glow: "rgba(16,185,129,0.15)",
       desc: "Use the MVP to test real demand before investing more. Validate what matters:",
       outputs: ["Do users understand it?", "Do they sign up?", "Do they complete the core action?", "Do they return?", "Do they pay?", "Which features matter?"],
     },
   ];
 
   return (
-    <section className="max-w-6xl mx-auto px-6 py-20 sm:py-24">
-      <div className="text-center mb-14">
-        <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3">How It Works</h2>
-        <p className="text-[#9090a8] text-lg">Three steps from idea to validated product.</p>
+    <section className="relative max-w-6xl mx-auto px-6 py-20 sm:py-28 overflow-hidden">
+      {/* Section background glow */}
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-[#a855f7]/5 blur-[150px]" />
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {steps.map((step) => (
-          <div key={step.num} className="relative group">
+
+      {/* Section header */}
+      <div className="text-center mb-16">
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#a855f7] mb-4">How It Works</p>
+        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
+          Three steps from idea to{" "}
+          <span className="bg-gradient-to-r from-[#a855f7] via-[#ec4899] to-[#10b981] bg-clip-text text-transparent">
+            validated product
+          </span>
+        </h2>
+        <p className="text-[#9090a8] text-lg max-w-xl mx-auto">
+          Stop guessing. Start building with a proven process that takes you from concept to market validation.
+        </p>
+      </div>
+
+      {/* Step cards with glassmorphism */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 relative">
+        {/* Connecting line (desktop) */}
+        <div className="hidden lg:block absolute top-1/3 left-[18%] right-[18%] h-px bg-gradient-to-r from-[#a855f7]/0 via-[#ec4899]/40 to-[#10b981]/0 z-0" />
+
+        {steps.map((step, i) => (
+          <div key={step.num} className="relative group z-10">
+            {/* Card glow behind */}
             <div
-              className={`rounded-2xl border ${COLORS.border} ${COLORS.card} p-6 h-full transition-all duration-300 ${COLORS.cardHover}`}
-              style={{ borderTopColor: step.color, borderTopWidth: 3 }}
-            >
-              <div className="text-3xl mb-4">{step.icon}</div>
-              <div className="text-xs font-bold mb-2" style={{ color: step.color }}>{step.num}</div>
-              <h3 className="text-lg font-semibold text-white mb-2">{step.title}</h3>
-              <p className="text-sm text-[#9090a8] leading-relaxed mb-4">{step.desc}</p>
-              <div className="border-t border-[#1e1e2e] pt-4">
-                <ul className="space-y-1.5">
-                  {step.outputs.map((item) => (
-                    <li key={item} className="text-xs text-[#606080] flex items-start gap-2">
-                      <span className="mt-0.5 shrink-0" style={{ color: step.color }}>✓</span>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
+              className="absolute inset-0 rounded-3xl blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 -z-10"
+              style={{ background: `radial-gradient(600px circle at 50% 50%, ${step.glow}, transparent 70%)` }}
+            />
+
+            {/* Glassmorphism card */}
+            <div className="relative rounded-3xl overflow-hidden h-full transition-all duration-500 group-hover:-translate-y-1">
+              {/* Glass background */}
+              <div
+                className="absolute inset-0 backdrop-blur-xl border border-white/[0.06]"
+                style={{
+                  background: `linear-gradient(135deg, ${step.color}08 0%, rgba(17,17,24,0.7) 40%, rgba(17,17,24,0.6) 100%)`,
+                }}
+              />
+              {/* Subtle inner border glow */}
+              <div
+                className="absolute inset-px rounded-[23px] opacity-30 group-hover:opacity-60 transition-opacity duration-500"
+                style={{
+                  background: `linear-gradient(135deg, ${step.color}20, transparent 50%)`,
+                }}
+              />
+
+              {/* Content */}
+              <div className="relative p-7 sm:p-8">
+                {/* Step number + icon */}
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl backdrop-blur-sm border border-white/[0.06]"
+                      style={{
+                        background: `linear-gradient(135deg, ${step.color}1a, ${step.color}08)`,
+                        boxShadow: `0 0 20px ${step.color}10`,
+                      }}
+                    >
+                      {step.icon}
+                    </div>
+                    <span
+                      className="text-2xl font-bold tracking-tight"
+                      style={{ color: step.color, fontFamily: "var(--font-space), monospace" }}
+                    >
+                      {step.num}
+                    </span>
+                  </div>
+
+                  {/* Arrow connector (except last) */}
+                  {i < 2 && (
+                    <div className="hidden lg:flex items-center">
+                      <svg className="w-5 h-5 opacity-30 group-hover:opacity-60 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ color: step.color }}>
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                      </svg>
+                    </div>
+                  )}
+                </div>
+
+                <h3 className="text-xl font-semibold text-white mb-3">{step.title}</h3>
+                <p className="text-sm text-[#9090a8] leading-relaxed mb-6">{step.desc}</p>
+
+                {/* Outputs */}
+                <div
+                  className="rounded-2xl p-5 space-y-2.5 backdrop-blur-sm border border-white/[0.04]"
+                  style={{ background: `rgba(10,10,15,0.5)` }}
+                >
+                  <p className="text-[10px] font-semibold uppercase tracking-wider text-[#606080] mb-3">Deliverables</p>
+                  <ul className="space-y-2">
+                    {step.outputs.map((item, j) => (
+                      <li key={item} className="flex items-start gap-2.5 text-sm transition-all duration-300 group-hover:translate-x-0.5">
+                        <span
+                          className="mt-1 w-1.5 h-1.5 rounded-full shrink-0 ring-1 ring-offset-1 ring-offset-[#0a0a0f]"
+                          style={{
+                            background: step.color,
+                            boxShadow: `0 0 6px ${step.color}60`,
+                            transitionDelay: `${j * 50}ms`,
+                          }}
+                        />
+                        <span className="text-[#c4c4d8] leading-snug">{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Bottom accent line */}
+      <div className="flex justify-center mt-14">
+        <div className="h-px w-32 bg-gradient-to-r from-transparent via-[#a855f7]/30 to-transparent" />
       </div>
     </section>
   );

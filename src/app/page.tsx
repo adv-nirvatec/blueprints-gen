@@ -106,16 +106,11 @@ function Nav() {
     <nav className="fixed top-0 inset-x-0 z-50 border-b border-white/[0.04] bg-[#0a0a0f]/70 backdrop-blur-xl">
       <div className="max-w-6xl mx-auto px-6 h-14 sm:h-16 flex items-center justify-between">
         <a href="#" className="flex items-center gap-2.5 group">
-          <div
-            className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold text-white transition-shadow duration-300 group-hover:shadow-lg"
-            style={{
-              background: "linear-gradient(135deg, #a855f7, #ec4899)",
-              boxShadow: "0 0 20px rgba(168,85,247,0.3)",
-            }}
-          >
-            FF
-          </div>
-          <span className="text-base font-semibold tracking-tight text-white">FailFast</span>
+          <img
+            src="/logo.png"
+            alt="FailFast"
+            className="h-8 sm:h-10 w-auto object-contain"
+          />
         </a>
         <div className="flex items-center gap-3">
           <a

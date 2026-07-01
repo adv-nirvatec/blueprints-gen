@@ -94,6 +94,7 @@ export default function LandingPage() {
       <Hero />
       <HowItWorks />
       <GeneratorSection />
+      <OtherSolutions />
       <Footer />
     </div>
   );
@@ -996,6 +997,63 @@ function SimpleTechStack({ techStack }: { techStack: TechStack }) {
         </div>
       ))}
     </div>
+  );
+}
+
+/* ─── Other Solutions ─── */
+
+function OtherSolutions() {
+  return (
+    <section className="max-w-6xl mx-auto px-6 py-20 sm:py-24 border-t border-[#1e1e2e]">
+      <div className="text-center mb-12">
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#9090a8] mb-3">Other Solutions</p>
+        <h2 className="text-2xl sm:text-3xl font-bold text-white">
+          More ways to validate faster
+        </h2>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-3xl mx-auto">
+        {/* Website Enhancer Card */}
+        <Link
+          href="/enhance"
+          className="group relative rounded-2xl border border-[#1e1e2e] bg-[#111118] p-6 sm:p-7 transition-all duration-300 hover:-translate-y-1 hover:border-[#ec4899]/30 hover:shadow-lg hover:shadow-[#ec4899]/5"
+        >
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#ec4899]/20 to-[#a855f7]/20 flex items-center justify-center text-2xl mb-4 border border-[#ec4899]/15 group-hover:scale-110 transition-transform duration-300">
+            🌐
+          </div>
+          <h3 className="text-lg font-semibold text-white mb-2">Website Enhancer</h3>
+          <p className="text-sm text-[#9090a8] leading-relaxed mb-4">
+            Drop your URL and watch our AI redesign your landing page with modern aesthetics — same content, fresh look.
+          </p>
+          <span className="inline-flex items-center gap-1.5 text-sm font-medium text-[#ec4899] group-hover:gap-2.5 transition-all">
+            Try it
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </span>
+        </Link>
+
+        {/* Blueprint Generator Card */}
+        <a
+          href="#generate"
+          className="group relative rounded-2xl border border-[#1e1e2e] bg-[#111118] p-6 sm:p-7 transition-all duration-300 hover:-translate-y-1 hover:border-[#a855f7]/30 hover:shadow-lg hover:shadow-[#a855f7]/5"
+        >
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#a855f7]/20 to-[#c084fc]/20 flex items-center justify-center text-2xl mb-4 border border-[#a855f7]/15 group-hover:scale-110 transition-transform duration-300">
+            🧬
+          </div>
+          <h3 className="text-lg font-semibold text-white mb-2">Blueprint Generator</h3>
+          <p className="text-sm text-[#9090a8] leading-relaxed mb-4">
+            Get a complete MVP blueprint with tech stack, architecture, DB schema and build sequence — AI-powered.
+          </p>
+          <span className="inline-flex items-center gap-1.5 text-sm font-medium text-[#a855f7] group-hover:gap-2.5 transition-all">
+            Generate
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </span>
+        </a>
+      </div>
+    </section>
   );
 }
 

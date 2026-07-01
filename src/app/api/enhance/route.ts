@@ -4,7 +4,7 @@ const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY || "sk-placeholder";
 const DEEPSEEK_BASE_URL = process.env.DEEPSEEK_BASE_URL || "https://api.deepseek.com/v1";
 
 // Vision model for screenshot analysis (uses the agent's configured vision provider)
-const VISION_API_KEY = process.env.VISION_API_KEY || "";
+const VISION_API_KEY = process.env.OPENAI_API_KEY || "";
 const VISION_BASE_URL = process.env.VISION_BASE_URL || "https://api.openai.com/v1";
 
 async function callDeepSeek(prompt: string, systemPrompt: string, maxTokens = 8000) {
@@ -83,16 +83,29 @@ async function callVision(base64Image: string, prompt: string): Promise<string> 
 }
 
 async function takeScreenshot(url: string): Promise<string | null> {
-  // We don't have Puppeteer in the Docker env.
-  // Instead, use a lightweight screenshot service or return null.
-  // For production, this would use a headless browser or screenshot API.
+  // Use a public screenshot API that doesn't require auth
   try {
-    // Try screenshot API (e.g. api.screenshotmachine.com or similar)
-    // For now, return null — visual analysis is optional enhancement
-    return null;
-  } catch {
-    return null;
-  }
+    // Screenshot machine free tier
+    const apiKey = process.env.SCREENSHOT_API_KEY || "";
+    if (apiKey) {
+      const res = await fetch(`https://api.screenshotmachine.com?key=${apiKey}&url=${encodeURIComponent(url)}&dimension=1024x768`);
+      if (res.ok) {
+        const buffer = Buffer.from(await res.arrayBuffer());
+        return buffer.toString("base64");
+      }
+    }
+  } catch {}
+  
+  // Fallback: thum.io free service
+  try {
+    const res = await fetch(`https://image.thum.io/get/width/1024/crop/768/${encodeURIComponent(url)}`);
+    if (res.ok) {
+      const buffer = Buffer.from(await res.arrayBuffer());
+      return buffer.toString("base64");
+    }
+  } catch {}
+  
+  return null;
 }
 
 function extractBrandDNA(html: string, domain: string): {
